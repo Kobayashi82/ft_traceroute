@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 15:34:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/01 19:17:06 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:11:22 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 
 	#pragma region "Parse VLAN Header"
 
-		int parse_ethernet_vheader(const t_packet *packet, t_ether_vheader *header) {
+		int parse_ethernet_vheader(const uint8_t *packet, t_ether_vheader *header) {
 			if (!packet || !header) return (1);
 
 			ft_memcpy(header->dest_mac, packet, 6);
@@ -93,7 +93,7 @@
 
 	#pragma region "Parse Header"
 
-		int parse_ethernet_header(const t_packet *packet, t_ether_header *header) {
+		int parse_ethernet_header(const uint8_t *packet, t_ether_header *header) {
 			if (!packet || !header) return (1);
 			
 			ft_memcpy(header->dest_mac, packet, 6);

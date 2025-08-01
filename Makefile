@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/01 19:18:15 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/01 19:21:13 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ SRC_DIR		= src/
 # ─────────── #
 
 SRCS		= main/main.c main/options.c				\
-			  network/MAC.c network/ethernet.c			\
+			  network/mac.c network/ethernet.c			\
 			  utils/utils.c
 
 # ───────────────────────────────────────────────────────────── #
