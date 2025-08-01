@@ -1,0 +1,16 @@
+*
+!.vscode
+!.vscode/**
+.vscode/launch.json
+.vscode/settings.json
+!doc
+!doc/**
+doc/ft_traceroute\ 4.4.pdf
+!inc
+!inc/**
+!src
+!src/**
+!Makefile
+!.gitignore
+!README.md
+!LICENSE
