@@ -60,7 +60,6 @@ ft_traceroute puede usar diferentes protocolos para las sondas:
 | **UDP**   | 33434+   | Puerto cerrado |
 | **ICMP**  | N/A      | Echo Reply     |
 | **TCP**   | Variable | SYN/ACK o RST  |
-|
 
 ## 🔧 Compilación
 
@@ -93,7 +92,6 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 |-------------|---------------|------------------------------------------------------|-------------------------|
 | `destino`   | IPv4/Hostname | Dirección IP o nombre de host                        | `8.8.8.8`, `google.com` |
 | `packetlen` | Número        | Longitud del paquete (default: IP header + 40 bytes) | `60`, `1500`            |
-|
 
 #### Básicas
 |   Opción   | Forma Larga |         Descripción          |
@@ -101,7 +99,6 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 | `-h`, `-?` | `--help`    | Muestra información de ayuda |
 | `-V`       | `--version` | Versión del programa         |
 |            | `--usage`   | Mensaje corto de uso         |
-|
 
 #### Control de Ruta
 | Opción |     Forma Larga     | Parámetro |                                             Descripción                                             |
@@ -112,7 +109,6 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 | `-w`   | `--wait=NUM`        | Segundos  | Tiempo de espera por respuesta (default: 5)                                                         |
 | `-N`   | `--sim-queries=NUM` | Número    | Número de sondas simultáneas (default: 16)                                                          |
 | `-z`   | `--sendwait=NUM`    | Segundos  | Intervalo mínimo entre sondas (default: 0). Si NUM es mayor que 10, se interpreta como milisegundos |
-|
 
 #### Configuración de Sondas
 | Opción |    Forma Larga    | Parámetro |                 Descripción                  |
@@ -129,7 +125,6 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 | `-I`   | `--icmp`    | Usa ICMP Echo Request en lugar de UDP |
 | `-T`   | `--tcp`     | Usa TCP SYN para sondas               |
 | `-U`   | `--udp`     | Usa UDP (comportamiento por defecto)  |
-|
 
 #### Opciones de Red
 | Opción |     Forma Larga      |  Parámetro  |                  Descripción                  |
@@ -138,7 +133,6 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 | `-d`   | `--debug`            | -           | Activa depuración a nivel de socket           |
 | `-i`   | `--interface=DEVICE` | Dispositivo | Especifica interfaz de red a usar             |
 | `-r`   | -                    | -           | Evita enrutamiento normal, envía directamente |
-|
 
 #### Valores TOS (Type of Service)
 
@@ -151,7 +145,6 @@ La opción `-t` permite configurar el campo TOS del header IP:
 | 8     | High Throughput      | Alto rendimiento   |
 | 136   | High Priority        | Alta prioridad     |
 | 184   | Expedited Forwarding | Reenvío expedito   |
-|
 
 ## 📡 Funcionamiento Interno
 
@@ -197,7 +190,6 @@ struct icmp_time_exceeded {
 | 2      | Protocol Unreachable   | Protocolo no soportado                   |
 | 3      | Port Unreachable       | Puerto cerrado (UDP traceroute)          |
 | 4      | Fragmentation Required | Fragmentación necesaria pero DF activado |
-|
 
 ### Detección de Finalización
 
@@ -229,7 +221,6 @@ traceroute to google.com (142.250.185.14), 30 hops max, 60 byte packets
 | `!N`    | Network Unreachable      | Red no existe o no enrutada          |
 | `!P`    | Protocol Unreachable     | Protocolo bloqueado                  |
 | `!X`    | Communication Prohibited | Filtrado administrativo              |
-|
 
 ### Análisis de Latencias
 
