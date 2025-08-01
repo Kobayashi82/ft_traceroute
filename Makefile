@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/01 13:24:47 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/01 19:18:15 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,9 +59,9 @@ SRC_DIR		= src/
 # ── FILES ── #
 # ─────────── #
 
-SRCS		= main/main.c main/options.c main/output.c	\
-			  network/socket.c network/icmp.c			\
-			  network/send.c network/receive.c
+SRCS		= main/main.c main/options.c				\
+			  network/MAC.c network/ethernet.c			\
+			  utils/utils.c
 
 # ───────────────────────────────────────────────────────────── #
 # ─────────────────────────── RULES ─────────────────────────── #
@@ -88,7 +88,7 @@ _compile: $(OBJS)
 	@$(MAKE) -s _progress; printf "\n"
 	@$(MAKE) -s _show_cursor
 
-	sudo setcap cap_net_raw+ep $(NAME)
+# 	sudo setcap cap_net_raw+ep $(NAME)
 # 	sudo setcap cap_net_raw,cap_net_admin+ep $(NAME)
 #	sudo setcap -r $(NAME)
 

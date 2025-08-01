@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ping.h                                             :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/13 22:27:38 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/07/22 18:20:43 by vzurera-         ###   ########.fr       */
+/*   Created: 2025/07/27 13:12:28 by vzurera-          #+#    #+#             */
+/*   Updated: 2025/07/28 13:54:08 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,16 @@
 
 #pragma region "Includes"
 
-	#include "options.h"
-	#include "network.h"
-
-#pragma endregion
-
-#pragma region "Structures"
-
-	typedef struct s_ping {
-		bool			running;
-		bool			in_preload;
-		char			*name;
-		t_data			data;
-		t_options		options;
-	}	t_ping;
-
-#pragma endregion
-
-#pragma region "Variables"
-
-	extern t_ping g_ping;
+	#include <stdio.h>
 
 #pragma endregion
 
 #pragma region "Methods"
 
-	void	show_header();
-	void	show_stats();
-	void	update_stats(double rtt);
-	void	show_ip_header(struct iphdr *ip, struct icmphdr *icmp, size_t size);
-	void	show_icmp_info(void *icmp, size_t size);
+	size_t	ft_strlen(const char *str);
+	int		ft_strlcpy(char *dst, const char *src, int dstsize);
+	int		ft_memcmp(const void *s1, const void *s2, int n);
+	void	*ft_memcpy(void *dst, const void *src, int n);
+	void	*ft_memset(void *b, int c, int len);
 
 #pragma endregion
