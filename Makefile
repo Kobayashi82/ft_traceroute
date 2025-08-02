@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/02 12:35:50 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/02 12:48:43 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ NAME		= ft_traceroute
 # ── FLAGS ── #
 # ─────────── #
 
-CC			= clang
+CC			= gcc
 CFLAGS		= -Wall -Wextra -Werror -O2
 
 # ───────────────── #
@@ -59,8 +59,15 @@ SRC_DIR		= src/
 # ── FILES ── #
 # ─────────── #
 
-SRCS		= main/main.c main/options.c						\
-			  network/mac.c ethernet_frame/ethernet.c			\
+SRCS		= main/main.c main/options.c					\
+															\
+			  ethernet_frame/ethernet.c						\
+			  ethernet_frame/ipv4.c ethernet_frame/ipv6.c	\
+			  ethernet_frame/icmp.c ethernet_frame/arp.c	\
+			  ethernet_frame/udp.c ethernet_frame/tcp.c		\
+															\
+			  network/socket.c network/mac.c				\
+															\
 			  utils/utils.c
 
 # ───────────────────────────────────────────────────────────── #

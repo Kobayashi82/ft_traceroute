@@ -6,14 +6,16 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 15:34:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/01 22:11:22 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:41:59 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma region "Includes"
 
-	#include "network/network.h"
+	#include "ethernet_frame/ethernet.h"
 	#include "utils/utils.h"
+
+	#include <arpa/inet.h>
 
 #pragma endregion
 
@@ -64,7 +66,7 @@
 
 	#pragma region "Has VLAN Tag"
 
-		int has_vlan_tag(const t_packet *packet) {
+		int has_vlan_tag(const uint8_t *packet) {
 			if (!packet) return (-1);
 
 			uint16_t tpid = ntohs(*(uint16_t *)(packet + 12));

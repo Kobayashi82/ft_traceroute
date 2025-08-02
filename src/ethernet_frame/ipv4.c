@@ -6,13 +6,13 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/01 19:27:07 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 12:44:40 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma region "Includes"
 
-	#include "network/network.h"
+	#include "ethernet_frame/ipv4.h"
 	#include "utils/utils.h"
 
 #pragma endregion
