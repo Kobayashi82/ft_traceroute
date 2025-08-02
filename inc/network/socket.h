@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:11:17 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 11:53:38 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:19:03 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,18 @@
 
 #pragma region "Includes"
 
-
-
-#pragma endregion
-
-#pragma region "Defines"
-
-	#define IPv4						0x0800		// IPv4
-
+	#include <sys/socket.h>
 
 #pragma endregion
 
-#pragma region "Structures"
+#pragma region "Methods"
 
-	typedef struct __attribute__((packed)) {
-		uint8_t		dest_mac[6];					// Destination MAC address
-		uint8_t		src_mac[6];						// Source MAC address
-		uint16_t	ethertype;						// Type of next protocol (IPv4, IPv6, ARP, WOL)
-	}	t_ether_header;
-
-#pragma endregion
-
-#pragma region "Information"
-
-	// Estructura con VLAN:			[ dst_mac ][ src_mac ][ TPID=0x8100 ][ TCI ][ ethertype ][ payload ]
-	//									 6          6            2          2         2        ...
-
-	// Estructura sin VLAN:			[ dst_mac ][ src_mac ][ ethertype ][ payload ]
-	//									 6          6           2        ...
-
-	// Valores de PCP y su significado:
-	// 
-	// |-----|--------------------|---------------------------------------------|
-	// | PCP |     Prioridad      |                 Descripción                 |
-	// |-----|--------------------|---------------------------------------------|
-	// |  0  | Routine traffic	  | Tráfico estándar (menos prioritario)        |
-	// |  1  | Video/Voice        | Tráfico de voz o video                      |
-	// |  2  | Video/Voice        | Tráfico de voz o video                      |
-	// |  3  | Video/Voice        | Tráfico de voz o video                      |
-	// |  4  | Best effort        | Tráfico común (navegación web)              |
-	// |  5  | Bulk data          | Tráfico de datos no urgente                 |
-	// |  6  | Background traffic | Tráfico de fondo (menos importante)         |
-	// |  7  | Critical traffic	  | Tráfico de alta prioridad (ej. emergencias) |
-	// |-----|--------------------|---------------------------------------------|
+	int socket_create(int domain, int type, int protocol, int reusable, int ip_hdrincl);
+	int socket_close(int sockfd);
+	int socket_bind(int sockfd, const struct sockaddr *addr, socklen_t len);
+	int socket_listen(int sockfd, int backlog);
+	int socket_connect(int sockfd, const struct sockaddr *addr, socklen_t len);
+	int socket_accept(int sockfd, struct sockaddr *addr, socklen_t *len);
+	int	socket_setopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
 
 #pragma endregion

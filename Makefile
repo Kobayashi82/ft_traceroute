@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/02 12:48:43 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/02 14:25:07 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,9 +66,9 @@ SRCS		= main/main.c main/options.c					\
 			  ethernet_frame/icmp.c ethernet_frame/arp.c	\
 			  ethernet_frame/udp.c ethernet_frame/tcp.c		\
 															\
-			  network/socket.c network/mac.c				\
+			  network/socket.c								\
 															\
-			  utils/utils.c
+			  utils/str.c utils/mem.c utils/mac.c
 
 # ───────────────────────────────────────────────────────────── #
 # ─────────────────────────── RULES ─────────────────────────── #

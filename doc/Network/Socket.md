@@ -7,8 +7,7 @@
 4. [Segundo Argumento: TYPE](#segundo-argumento-type)
 5. [Tercer Argumento: PROTOCOL](#tercer-argumento-protocol)
 6. [Niveles de Control](#niveles-de-control)
-7. [Casos Prácticos](#casos-prácticos)
-8. [Compatibilidad entre Argumentos](#compatibilidad-entre-argumentos)
+7. [Tabla de compatibilidad](#tabla-de-compatibilidad)
 
 ## Introducción
 
@@ -186,67 +185,6 @@ socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
 
 ---
 
-## Niveles de Control
-
-### 1. Sockets de aplicación (normales)
-```c
-// TCP - kernel maneja todo salvo datos
-socket(AF_INET, SOCK_STREAM, 0);
-
-// UDP - kernel maneja todo salvo datos  
-socket(AF_INET, SOCK_DGRAM, 0);
-```
-**Control:** Solo datos de aplicación  
-**Kernel crea:** Ethernet + IP + TCP/UDP headers
-
-### 2. Raw sockets IP
-```c
-// Para ICMP
-socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-
-// Para TCP (sin conexión)
-socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
-
-// Para cualquier protocolo IP
-socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-```
-**Control:** IP header + protocolo superior  
-**Kernel crea:** Ethernet header
-
-### 3. Raw sockets Ethernet
-```c
-// Control total de frame Ethernet
-socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-```
-**Control:** Frame Ethernet completo  
-**Kernel crea:** Nada
-
-### Control del IP Header con IP_HDRINCL
-
-**Sin IP_HDRINCL (por defecto):**
-```c
-int sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-// Tú creas: ICMP header
-// Kernel crea: Ethernet + IP header
-```
-
-**Con IP_HDRINCL:**
-```c
-int sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-int on = 1;
-setsockopt(sock, IPPROTO_IP, IP_HDRINCL, &on, sizeof(on));
-// Tú creas: IP + ICMP header
-// Kernel crea: Ethernet header
-```
-
-**IP_HDRINCL funciona con:**
-- IPPROTO_ICMP
-- IPPROTO_TCP
-- IPPROTO_UDP
-- raw socket (AF_INET)
-
----
-
 ## Tabla de compatibilidad
 
 |    Domain     | STREAM  |  DGRAM  | RAW |
@@ -272,13 +210,19 @@ El conflicto es que Ethernet por sí mismo no proporciona confiabilidad, eso lo 
 
 ### Headers que debes crear según el socket
 
-|                      Socket                      |           Tú creas           |     Kernel crea     |
-|--------------------------------------------------|------------------------------|---------------------|
-| `AF_INET, SOCK_STREAM, 0`                        | Payload                      | Ethernet + IP + TCP |
-| `AF_INET, SOCK_DGRAM, 0`                         | Payload                      | Ethernet + IP + UDP |
-| `AF_INET, SOCK_RAW, IPPROTO_ICMP`                | ICMP                         | Ethernet + IP       |
-| `AF_INET, SOCK_RAW, IPPROTO_ICMP` + `IP_HDRINCL` | IP + ICMP                    | Ethernet            |
-| `AF_PACKET, SOCK_RAW, ETH_P_ALL`                 | Ethernet + IP + TCP/UDP/ICMP | -                   |
+|                      Socket                      |              Tú creas              |     Kernel crea     |
+|--------------------------------------------------|------------------------------------|---------------------|
+| `AF_INET, SOCK_STREAM, 0`                        | Payload                            | Ethernet + IP + TCP |
+| `AF_INET, SOCK_DGRAM, 0`                         | Payload                            | Ethernet + IP + UDP |
+| `AF_INET, SOCK_RAW, IPPROTO_TCP`                 | TCP + Payload                      | Ethernet + IP       |
+| `AF_INET, SOCK_RAW, IPPROTO_UDP`                 | UDP + Payload                      | Ethernet + IP       |
+| `AF_INET, SOCK_RAW, IPPROTO_ICMP`                | ICMP + Payload                     | Ethernet + IP       |
+| `AF_INET, SOCK_RAW, IPPROTO_TCP` + `IP_HDRINCL`  | IP + TCP + Payload                 | Ethernet            |
+| `AF_INET, SOCK_RAW, IPPROTO_UDP` + `IP_HDRINCL`  | IP + UDP + Payload                 | Ethernet            |
+| `AF_INET, SOCK_RAW, IPPROTO_ICMP` + `IP_HDRINCL` | IP + ICMP + Payload                | Ethernet            |
+| `AF_INET, SOCK_RAW, IPPROTO_RAW`                 | IP + Protocol + Payload            | Ethernet            |
+| `AF_PACKET, SOCK_DGRAM, ETH_P_ALL`               | IP + Protocol + Payload            | Ethernet            |
+| `AF_PACKET, SOCK_RAW, ETH_P_ALL`                 | Ethernet + IP + Protocol + Payload | FCS lo crea el NIC  |
 
 ---
 
