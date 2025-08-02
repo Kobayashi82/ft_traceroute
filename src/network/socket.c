@@ -6,17 +6,13 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:11:09 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 14:25:40 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:28:43 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma region "Includes"
 
 	#include "network/socket.h"
-	#include "utils/utils.h"
-
-	#include <unistd.h>
-	#include <netinet/in.h>
 
 #pragma endregion
 

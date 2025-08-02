@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 19:25:30 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:27:23 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 #pragma region "Includes"
 
-	#include <stdint.h>
 	#include <arpa/inet.h>
+	#include <net/if_arp.h>
+	#include <net/ethernet.h>
 
 #pragma endregion
 

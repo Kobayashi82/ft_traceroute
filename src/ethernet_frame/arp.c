@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 19:25:56 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:27:34 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 	#include "ethernet_frame/arp.h"
 	#include "utils/utils.h"
-
-	#include <net/if_arp.h>
-	#include <net/ethernet.h>
 
 #pragma endregion
 

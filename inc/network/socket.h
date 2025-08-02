@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 11:11:17 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 14:19:03 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:28:31 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 #pragma region "Includes"
 
+	#include <unistd.h>
 	#include <sys/socket.h>
+	#include <netinet/in.h>
 
 #pragma endregion
 
