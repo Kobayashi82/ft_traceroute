@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:38:38 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/03 22:44:10 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 	int arp_cmp_request(t_arp_header *header, uint32_t spa, uint32_t tpa) {
 		if (!header) return (0);
 
-		if (ntohs(header->ptype) != ETH_P_ARP)							return (0);
+		if (ntohs(header->ptype) != ETH_P_IP)							return (0);
 		if (ntohs(header->oper) != ARPOP_REQUEST)						return (0);
 
 		if (header->spa != spa)											return (0);

@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 17:55:12 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/03 22:44:54 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@
 
 #pragma region "Methods"
 
+	int	icmp_set_type(t_icmp_header *header, uint8_t type);
+	int	icmp_set_code(t_icmp_header *header, uint8_t code);
 	int	icmp_set_checksum(t_icmp_header *header, uint16_t data_len);
 	int	icmp_set_id(t_icmp_header *header, uint16_t id);
 	int	icmp_set_seq(t_icmp_header *header, uint16_t seq);
