@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 21:10:05 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/03 22:38:38 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@
 	int arp_cmp_request(t_arp_header *header, uint32_t spa, uint32_t tpa) {
 		if (!header) return (0);
 
-		if (ntohs(header->htype) != ETH_P_ARP)							return (0);
-		if (ntohs(header->oper) != ARP_REQUEST)							return (0);
+		if (ntohs(header->ptype) != ETH_P_ARP)							return (0);
+		if (ntohs(header->oper) != ARPOP_REQUEST)						return (0);
 
 		if (header->spa != spa)											return (0);
 		if (header->tpa != tpa)											return (0);
@@ -60,7 +60,7 @@
 
 	#pragma region "Hardware Type"
 
-		int ethernet_set_htype(t_arp_header *header, uint16_t htype) {
+		int arp_set_htype(t_arp_header *header, uint16_t htype) {
 			if (!header) return (1);
 
 			header->htype = htons(htype);
@@ -72,7 +72,7 @@
 
 	#pragma region "Protocol Type"
 
-		int ethernet_set_ptype(t_arp_header *header, uint16_t ptype) {
+		int arp_set_ptype(t_arp_header *header, uint16_t ptype) {
 			if (!header) return (1);
 
 			header->ptype = htons(ptype);
@@ -84,7 +84,7 @@
 
 	#pragma region "Hardware Length"
 
-		int ethernet_set_hlen(t_arp_header *header, uint8_t hlen) {
+		int arp_set_hlen(t_arp_header *header, uint8_t hlen) {
 			if (!header) return (1);
 
 			header->hlen = hlen;
@@ -96,7 +96,7 @@
 
 	#pragma region "Protocol Length"
 
-		int ethernet_set_plen(t_arp_header *header, uint8_t plen) {
+		int arp_set_plen(t_arp_header *header, uint8_t plen) {
 			if (!header) return (1);
 
 			header->plen = plen;
@@ -108,7 +108,7 @@
 
 	#pragma region "Operation"
 
-		int ethernet_set_oper(t_arp_header *header, uint16_t oper) {
+		int arp_set_oper(t_arp_header *header, uint16_t oper) {
 			if (!header) return (1);
 
 			header->oper = htons(oper);
@@ -120,7 +120,7 @@
 
 	#pragma region "Source Hardware Address (MAC)"
 
-		int ethernet_set_sha(t_arp_header *header, const uint8_t *sha) {
+		int arp_set_sha(t_arp_header *header, const uint8_t *sha) {
 			if (!header || !sha) return (1);
 
 			ft_memcpy(header->sha, sha, 6);
@@ -132,7 +132,7 @@
 
 	#pragma region "Sender Protocol Address (IP)"
 
-		int ethernet_set_spa(t_arp_header *header, uint32_t spa) {
+		int arp_set_spa(t_arp_header *header, uint32_t spa) {
 			if (!header) return (1);
 
 			header->spa = htons(spa);
@@ -144,7 +144,7 @@
 
 	#pragma region "Target Hardware Address (MAC)"
 
-		int ethernet_set_tha(t_arp_header *header, const uint8_t *tha) {
+		int arp_set_tha(t_arp_header *header, const uint8_t *tha) {
 			if (!header || !tha) return (1);
 
 			ft_memcpy(header->tha, tha, 6);
@@ -156,7 +156,7 @@
 
 	#pragma region "Target Protocol Address (IP)"
 
-		int ethernet_set_tpa(t_arp_header *header, uint32_t tpa) {
+		int arp_set_tpa(t_arp_header *header, uint32_t tpa) {
 			if (!header) return (1);
 
 			header->tpa = htons(tpa);

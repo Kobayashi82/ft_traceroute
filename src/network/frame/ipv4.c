@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 21:10:01 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/03 22:28:47 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,14 @@
 			if (!header) return (1);
 
 			header->ttl = ttl;
+
+			return (0);
+		}
+
+		int ip_inc_ttl(t_ip_header *header) {
+			if (!header) return (1);
+
+			header->ttl++;
 
 			return (0);
 		}
