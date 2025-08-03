@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 14:02:20 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:29:56 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,64 +37,83 @@
 
 #pragma endregion
 
-#pragma region "Set Data Length"
+#pragma region "Set"
 
-	int udp_set_data_length(t_udp_header *header, uint16_t data_len) {
-		if (!header) return (1);
+	#pragma region "Port"
 
-		header->length = sizeof(t_udp_header) + data_len;
+		#pragma region "SRC Port"
 
-		return (0);
-	}
+			int udp_set_src_port(t_udp_header *header, uint16_t src_port) {
+				if (!header) return (1);
 
-#pragma endregion
+				header->src_port = htons(src_port);
 
-#pragma region "Set Length"
+				return (0);
+			}
 
-	int udp_set_length(t_udp_header *header, uint16_t length) {
-		if (!header) return (1);
-		if (length < sizeof(t_udp_header)) length = sizeof(t_udp_header);
+		#pragma endregion
 
-		header->length = htons(length);
+		#pragma region "DST Port"
 
-		return (0);
-	}
+			int udp_set_dst_port(t_udp_header *header, uint16_t dst_port) {
+				if (!header) return (1);
 
-#pragma endregion
+				header->dst_port = htons(dst_port);
 
-#pragma region "Set Checksum"
+				return (0);
+			}
 
-	int udp_set_checksum(t_udp_header *header, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data) {
-		if (!header) return (1);
-		if (!data) data_len = 0;
+		#pragma endregion
 
-		unsigned long total_sum = 0;
+	#pragma endregion
 
-		struct __attribute__((__packed__)) {
-			uint32_t	src_addr;						// 
-			uint32_t	dst_addr;						// 
-			uint8_t		zeroes;							// 
-			uint8_t		protocol;						// 
-			uint16_t	length;							// 
-		}	pseudo_header;
+	#pragma region "Length"
 
-		pseudo_header.src_addr = src_addr;
-		pseudo_header.dst_addr = dst_addr;
-		pseudo_header.zeroes = 0;
-		pseudo_header.protocol = IPPROTO_UDP;
-		pseudo_header.length = htons(sizeof(t_udp_header) + data_len);
-		total_sum += checksum_partial(&pseudo_header, sizeof(pseudo_header));
+		int udp_set_length(t_udp_header *header, uint16_t data_len) {
+			if (!header) return (1);
 
-		header->length = htons(sizeof(t_udp_header) + data_len);
-		header->checksum = 0;
-		total_sum += checksum_partial(header, sizeof(t_udp_header));
+			header->length = htons(sizeof(t_udp_header) + data_len);
 
-		if (data && data_len > 0) total_sum += checksum_partial(data, data_len);
+			return (0);
+		}
 
-		header->checksum = checksum(total_sum);
+	#pragma endregion
 
-		return (0);
-	}
+	#pragma region "Checksum"
+
+		int udp_set_checksum(t_udp_header *header, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data) {
+			if (!header) return (1);
+			if (!data) data_len = 0;
+
+			unsigned long total_sum = 0;
+
+			struct __attribute__((__packed__)) {
+				uint32_t	src_addr;						// 
+				uint32_t	dst_addr;						// 
+				uint8_t		zeroes;							// 
+				uint8_t		protocol;						// 
+				uint16_t	length;							// 
+			}	pseudo_header;
+
+			pseudo_header.src_addr = src_addr;
+			pseudo_header.dst_addr = dst_addr;
+			pseudo_header.zeroes = 0;
+			pseudo_header.protocol = IPPROTO_UDP;
+			pseudo_header.length = htons(sizeof(t_udp_header) + data_len);
+			total_sum += checksum_partial(&pseudo_header, sizeof(pseudo_header));
+
+			header->length = htons(sizeof(t_udp_header) + data_len);
+			header->checksum = 0;
+			total_sum += checksum_partial(header, sizeof(t_udp_header));
+
+			if (data && data_len > 0) total_sum += checksum_partial(data, data_len);
+
+			header->checksum = checksum(total_sum);
+
+			return (0);
+		}
+
+	#pragma endregion
 
 #pragma endregion
 
@@ -115,7 +134,7 @@
 #pragma region "Create"
 
 	int udp_create_header(t_udp_header *header, uint16_t src_port, uint16_t dst_port, uint16_t data_len) {
-		if (!header || !dst_port ) return (1);
+		if (!header) return (1);
 
 		header->src_port = htons(src_port);
 		header->dst_port = htons(dst_port);
