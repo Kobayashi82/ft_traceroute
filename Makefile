@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/02 20:09:53 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/03 19:57:31 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,15 +59,17 @@ SRC_DIR		= src/
 # ── FILES ── #
 # ─────────── #
 
-SRCS		= main/main.c main/options.c					\
-															\
-			  ethernet_frame/ethernet.c						\
-			  ethernet_frame/ipv4.c							\
-			  ethernet_frame/icmp.c ethernet_frame/arp.c	\
-			  ethernet_frame/udp.c ethernet_frame/tcp.c		\
-															\
-			  network/socket.c								\
-															\
+SRCS		= main/main.c main/options.c			\
+													\
+			  network/frame/ethernet.c		\
+			  network/frame/ipv4.c			\
+			  network/frame/icmp.c			\
+			  network/frame/udp.c			\
+			  network/frame/tcp.c			\
+			  network/frame/arp.c			\
+													\
+			  network/socket.c						\
+													\
 			  utils/str.c utils/mem.c utils/mac.c
 
 # ───────────────────────────────────────────────────────────── #
@@ -269,8 +271,8 @@ wipe:
 # ─────────────────── #
 
 _progress:
-	@total=23; printf "\r\t"; for i in $$(seq 1 $$total); do printf "$(RED)─"; sleep 0.01; done; printf "$(NC)"
-	@total=23; printf "\r\t"; for i in $$(seq 1 $$total); do printf "─"; sleep 0.01; done; printf "\n$(NC)"
+	@total=27; printf "\r\t"; for i in $$(seq 1 $$total); do printf "$(RED)─"; sleep 0.01; done; printf "$(NC)"
+	@total=27; printf "\r\t"; for i in $$(seq 1 $$total); do printf "─"; sleep 0.01; done; printf "\n$(NC)"
 
 # ─────────── #
 # ── PHONY ── #

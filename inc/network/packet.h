@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   traceroute.h                                       :+:      :+:    :+:   */
+/*   packet.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/13 22:27:38 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 19:53:45 by vzurera-         ###   ########.fr       */
+/*   Created: 2025/07/18 20:40:48 by vzurera-          #+#    #+#             */
+/*   Updated: 2025/08/03 19:57:31 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,16 @@
 
 #pragma region "Includes"
 
-	#include "main/options.h"
-	#include "network/packet.h"
+	#include "network/socket.h"
+	#include "frame/ethernet.h"
 
 #pragma endregion
 
 #pragma region "Structures"
 
-	typedef struct s_traceroute {
-		bool			running;
-		char			*name;
-		t_options		options;
-	}	t_traceroute;
-
-#pragma endregion
-
-#pragma region "Variables"
-
-	extern t_traceroute g_traceroute;
+	typedef struct __attribute__((packed)) {
+		uint32_t		packet_len;
+	}	t_packet;
 
 #pragma endregion
 
