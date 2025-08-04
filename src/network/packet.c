@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:22:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 14:31:20 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:32:10 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
    | ARP      | No               | No                               |
    | PAYLOAD  | No               | No                               |
 */
-
-// Si cambio ETHERNET o TCP debo desplazar los datos y actualizar los punteros
 
 #pragma region "Includes"
 
