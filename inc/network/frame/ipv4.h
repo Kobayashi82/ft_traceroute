@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:35:56 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:45:35 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,20 @@
 	typedef struct __attribute__((__packed__)) {
 		uint8_t		ver_ihl;						// IHL (min = 5, max = 15)
 		uint8_t		dscp_ecn;						// 
-		uint16_t	length;							// Length (min = 20, max = 65535)
+		uint16_t	length;							// Length (min = 20, max = 65535) - (header + payload)
 		uint16_t	id;								// 
 		uint16_t	frag;							// 
 		uint8_t		ttl;							// 
 		uint8_t		protocol;						// 
-		uint16_t	checksum;						// 
+		uint16_t	checksum;						// (header)
 		uint32_t	src_addr;						// 
 		uint32_t	dst_addr;						// 
 	}	t_ip_header;
+
+	typedef struct __attribute__((__packed__)) {
+		uint8_t		options[40];					// 
+		uint8_t		length;							// 
+	}	t_ip_option;
 
 #pragma endregion
 
@@ -67,6 +72,6 @@
 	int	ip_set_src_addr(t_ip_header *header, uint32_t src_addr);
 	int	ip_set_dst_addr(t_ip_header *header, uint32_t dst_addr);
 
-	int create_ip_header(t_ip_header *header, uint8_t dscp, uint8_t ecn, uint16_t data_len, uint16_t id, uint8_t df, uint8_t mf, uint8_t frag_offset, uint8_t ttl, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr);
+	int create_ip_header(t_ip_header *header, uint8_t dscp, uint8_t ecn, uint16_t data_len, uint16_t id, uint8_t frag_df, uint8_t frag_mf, uint16_t frag_offset, uint8_t ttl, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr);
 
 #pragma endregion

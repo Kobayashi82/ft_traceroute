@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:37:09 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:01:33 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 	typedef struct __attribute__((__packed__)) {
 		uint16_t	src_port;						// 
 		uint16_t	dst_port;						// 
-		uint16_t	length;							// 
-		uint16_t	checksum;						// 
+		uint16_t	length;							// (header + payload)
+		uint16_t	checksum;						// (pseudo header + header + payload)
 	}	t_udp_header;
 
 #pragma endregion

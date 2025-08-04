@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 21:09:55 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 13:26:24 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,23 @@
 
 #pragma region "Checksum"
 
+	static unsigned long checksum_partial(const void *data, int len) {
+		unsigned long			sum = 0;
+		const unsigned short	*buf = data;
+
+		while (len > 1) { sum += *buf++; len -= 2; }
+		if (len == 1) sum += *(unsigned char *)buf;
+
+		return (sum);
+	}
+
+	static unsigned short checksum_final(unsigned long total_sum) {
+		total_sum = (total_sum >> 16) + (total_sum & 0xFFFF);
+		total_sum += (total_sum >> 16);
+
+		return (unsigned short)(~total_sum);
+	}
+
 	static unsigned short checksum(void *data, int len) {
 		unsigned long	sum = 0;
 		unsigned short	*buf = data;
@@ -46,7 +63,6 @@
 
 		return (unsigned short)(~sum);
 	}
-
 #pragma endregion
 
 #pragma region "Set"
@@ -77,11 +93,17 @@
 
 	#pragma region "Checksum"
 
-		int icmp_set_checksum(t_icmp_header *header, uint16_t data_len) {
-			if (!header || data_len < sizeof(t_icmp_header)) return (1);
+		int icmp_set_checksum(t_icmp_header *header, uint16_t data_len, const void *data) {
+			if (!header) return (1);
+
+			unsigned long total_sum = 0;
 
 			header->checksum = 0;
-			header->checksum = checksum(header, sizeof(t_icmp_header) + data_len);
+			total_sum += checksum_partial(header, sizeof(t_icmp_header));
+
+			if (data && data_len > 0) total_sum += checksum_partial(data, data_len);
+
+			header->checksum = htons(checksum_final(total_sum));
 
 			return (0);
 		}
@@ -270,7 +292,7 @@
 			header->checksum = 0;
 			header->un.gateway = 0;						// Unused, must be zero
 
-			header->checksum = checksum(header, sizeof(t_icmp_header));
+			header->checksum = htons(checksum(header, sizeof(t_icmp_header)));
 
 			return (0);
 		}

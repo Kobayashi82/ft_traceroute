@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:44:54 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:28:45 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 	typedef struct __attribute__((__packed__)) {
 		uint8_t		type;							// ICMP message type
 		uint8_t		code;							// ICMP subtype/code
-		uint16_t	checksum;						// Checksum of ICMP header and data
+		uint16_t	checksum;						// Checksum of ICMP header and data (header + payload)
 		union {
 			struct {
 				uint16_t id;						// Identifier (used to match request and reply)
@@ -43,7 +43,7 @@
 
 	int	icmp_set_type(t_icmp_header *header, uint8_t type);
 	int	icmp_set_code(t_icmp_header *header, uint8_t code);
-	int	icmp_set_checksum(t_icmp_header *header, uint16_t data_len);
+	int icmp_set_checksum(t_icmp_header *header, uint16_t data_len, const void *data);
 	int	icmp_set_id(t_icmp_header *header, uint16_t id);
 	int	icmp_set_seq(t_icmp_header *header, uint16_t seq);
 	int	icmp_inc_seq(t_icmp_header *header);

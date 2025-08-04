@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:25:52 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 11:25:53 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:48:29 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@
 
 #pragma endregion
 
+#pragma region "Enumerators"
+
+	typedef enum e_header_type { ETHERNET, IP, ICMP, UDP, TCP, ARP, PAYLOAD, IP_OPTION, TCP_OPTION } t_herdar_type;
+
+#pragma endregion
+
 #pragma region "Structures"
 
 	typedef struct __attribute__((packed)) {
@@ -36,17 +42,24 @@
 		uint32_t			packet_len;
 		t_ethernet_header	*ethernet_header;
 		t_ip_header			*ip_header;
+		t_ip_option			*ip_option;
 		t_icmp_header		*icmp_header;
 		t_udp_header		*udp_header;
 		t_tcp_header		*tcp_header;
+		t_tcp_option		*tcp_option;
 		t_arp_header		*arp_header;
 		void				*payload;
+		uint16_t			payload_len;
+
 	}	t_packet;
 
 #pragma endregion
 
 #pragma region "Methods"
 
-
+	int	packet_add(t_packet *packet, void *data, uint32_t data_len, t_herdar_type header_type);
+	int	packet_remove(t_packet *packet, t_herdar_type header_type);;
+	int	packet_validate(t_packet *packet);;
+	int	packet_complete(t_packet *packet);;
 
 #pragma endregion

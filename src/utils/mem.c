@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 13:11:44 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/02 14:21:28 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:56:12 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,26 @@
 
 		if (!n || (!d && !s && n)) return (dst);
 		while (n-- > 0) *d++ = *s++;
+
+		return (dst);
+	}
+
+#pragma endregion
+
+#pragma region "MEMMOVE"
+
+	void *ft_memmove(void *dst, const void *src, int len) {
+		unsigned char		*d = (unsigned char *)dst;
+		const unsigned char	*s = (const unsigned char *)src;
+
+		if (!d && !s && len) return (dst);
+		if (d < s)
+			while (len-- > 0) *d++ = *s++;
+		else {
+			d += len - 1;
+			s += len - 1;
+			while (len-- > 0) *d-- = *s--;
+		}
 
 		return (dst);
 	}

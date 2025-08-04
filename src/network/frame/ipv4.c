@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:46:05 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:30:34 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@
 			if (!header) return (1);
 
 			header->checksum = 0;
-			header->checksum = checksum(header, sizeof(t_ip_header));
+			header->checksum = htons(checksum(header, sizeof(t_ip_header)));
 
 			return (0);
 		}
@@ -254,7 +254,7 @@
 		header->src_addr = src_addr;
 		header->dst_addr = dst_addr;
 
-		header->checksum = checksum(header, sizeof(t_ip_header));
+		header->checksum = htons(checksum(header, sizeof(t_ip_header)));
 
 		return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 21:10:23 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:28:30 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@
 
 		int udp_set_checksum(t_udp_header *header, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data) {
 			if (!header) return (1);
-			if (!data) data_len = 0;
 
 			unsigned long total_sum = 0;
 
@@ -122,7 +121,7 @@
 
 			if (data && data_len > 0) total_sum += checksum_partial(data, data_len);
 
-			header->checksum = checksum(total_sum);
+			header->checksum = htons(checksum(total_sum));
 
 			return (0);
 		}
