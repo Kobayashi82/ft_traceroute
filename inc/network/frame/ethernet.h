@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 16:02:13 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:27:02 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 11:20:56 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@
 		uint8_t		dst_mac[6];						// Destination MAC address
 		uint8_t		src_mac[6];						// Source MAC address
 		uint16_t	ethertype;						// Type of protocol (ETH_P_IP, ETH_P_ARP)
-	}	t_ether_header;
+	}	t_ethernet_header;
 
 #pragma endregion
 
 #pragma region "Methods"
 
-	int	ethernet_set_dst_mac(t_ether_header *header, const uint8_t *dst_mac);
-	int	ethernet_set_src_mac(t_ether_header *header, const uint8_t *src_mac);
-	int	ethernet_set_ethertype(t_ether_header *header, uint16_t ethertype);
-	int	ethernet_create_header(t_ether_header *header, const uint8_t *dst_mac, const uint8_t *src_mac, uint16_t ethertype);
+	int	ethernet_set_dst_mac(t_ethernet_header *header, const uint8_t *dst_mac);
+	int	ethernet_set_src_mac(t_ethernet_header *header, const uint8_t *src_mac);
+	int	ethernet_set_ethertype(t_ethernet_header *header, uint16_t ethertype);
+	int	ethernet_create_header(t_ethernet_header *header, const uint8_t *dst_mac, const uint8_t *src_mac, uint16_t ethertype);
 
 #pragma endregion
