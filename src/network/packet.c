@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:22:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 13:35:51 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:31:20 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,11 @@
 			static int ethernet_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->ethernet_header || packet->ip_header || packet->ip_option || packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
+				ft_memcpy(packet, data, sizeof(t_ethernet_header));
 				packet->ethernet_header = (t_ethernet_header *)packet;
+				packet->packet_len = sizeof(t_ethernet_header);
 
 				return (0);
 			}
@@ -68,23 +56,11 @@
 			static int ip_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->ip_header || packet->ip_option || packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				ft_memcpy(packet + packet->packet_len, data, sizeof(t_ip_header));
+				packet->ip_header = (t_ip_header *)(packet + packet->packet_len);
+				packet->packet_len += sizeof(t_ip_header);
 
 				return (0);
 			}
@@ -96,23 +72,15 @@
 			static int ip_option_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (!packet->ip_header) return (1);
+				if (packet->ip_option || packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				uint8_t option_len = ((t_ip_option *)data)->length;
+				// validar option_len y return 1 si no multiple de 4;
+
+				ft_memcpy(packet + packet->packet_len, data, option_len);
+				packet->ip_option = (t_ip_option *)(packet + packet->packet_len);
+				packet->packet_len += option_len;
 
 				return (0);
 			}
@@ -124,23 +92,13 @@
 			static int icmp_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->ethernet_header && !packet->ip_header) return (1);
+				if (packet->ip_option && !packet->ip_header) return (1);
+				if (packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				ft_memcpy(packet + packet->packet_len, data, sizeof(t_icmp_header));
+				packet->icmp_header = (t_icmp_header *)(packet + packet->packet_len);
+				packet->packet_len += sizeof(t_icmp_header);
 
 				return (0);
 			}
@@ -152,23 +110,13 @@
 			static int udp_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->ethernet_header && !packet->ip_header) return (1);
+				if (packet->ip_option && !packet->ip_header) return (1);
+				if (packet->udp_header || packet->icmp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				ft_memcpy(packet + packet->packet_len, data, sizeof(t_udp_header));
+				packet->udp_header = (t_udp_header *)(packet + packet->packet_len);
+				packet->packet_len += sizeof(t_udp_header);
 
 				return (0);
 			}
@@ -180,23 +128,13 @@
 			static int tcp_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->ethernet_header && !packet->ip_header) return (1);
+				if (packet->ip_option && !packet->ip_header) return (1);
+				if (packet->tcp_header || packet->icmp_header || packet->udp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				ft_memcpy(packet + packet->packet_len, data, sizeof(t_tcp_header));
+				packet->tcp_header = (t_tcp_header *)(packet + packet->packet_len);
+				packet->packet_len += sizeof(t_tcp_header);
 
 				return (0);
 			}
@@ -208,23 +146,15 @@
 			static int tcp_option_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (!packet->tcp_header) return (1);
+				if (packet->tcp_option || packet->icmp_header || packet->udp_header || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				uint8_t option_len = ((t_tcp_option *)data)->length;
+				// validar option_len y return 1 si no multiple de 4;
+
+				ft_memcpy(packet + packet->packet_len, data, option_len);
+				packet->tcp_option = (t_tcp_option *)(packet + packet->packet_len);
+				packet->packet_len += option_len;
 
 				return (0);
 			}
@@ -236,23 +166,11 @@
 			static int arp_add(t_packet *packet, void *data) {
 				if (!packet || !data) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->arp_header || packet->ip_header || packet->ip_option || packet->icmp_header || packet->tcp_header || packet->tcp_option || packet->payload) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
+				ft_memcpy(packet + packet->packet_len, data, sizeof(t_arp_header));
+				packet->arp_header = (t_arp_header *)(packet + packet->packet_len);
+				packet->packet_len += sizeof(t_arp_header);
 
 				return (0);
 			}
@@ -262,120 +180,15 @@
 		#pragma region "Payload"
 
 			static int payload_add(t_packet *packet, void *data, uint16_t data_len) {
-				if (!packet || !data) return (1);
-				(void) data_len;
+				if (!packet || !data || !data_len) return (1);
 
-				if (!packet->ethernet_header) {
-					if (packet->packet_len > 0) {
-						if (packet->packet_len + sizeof(t_ethernet_header) > MAX_PACKET_LEN) return (1);
-						ft_memmove((uint8_t *)packet + sizeof(t_ethernet_header), packet, packet->packet_len);
-						if (packet->ip_header)		packet->ip_header	+= sizeof(t_ethernet_header);
-						if (packet->ip_option)		packet->ip_option	+= sizeof(t_ethernet_header);
-						if (packet->icmp_header)	packet->icmp_header	+= sizeof(t_ethernet_header);
-						if (packet->udp_header)		packet->udp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_header)		packet->tcp_header	+= sizeof(t_ethernet_header);
-						if (packet->tcp_option)		packet->tcp_option	+= sizeof(t_ethernet_header);
-						if (packet->arp_header)		packet->arp_header	+= sizeof(t_ethernet_header);
-						if (packet->payload)		packet->payload		+= sizeof(t_ethernet_header);
-					}
-				}
+				if (packet->packet_len + data_len >= MAX_PACKET_LEN) return (1);
+				if (packet->payload || (!packet->icmp_header && !packet->udp_header && !packet->tcp_option)) return (1);
 
-				ft_memcpy(packet->ethernet_header, data, sizeof(t_ethernet_header));
-				packet->ethernet_header = (t_ethernet_header *)packet;
-
-				return (0);
-			}
-
-		#pragma endregion
-
-	#pragma endregion
-
-	#pragma region "Remove"
-
-		#pragma region "Ethernet"
-
-			static int ethernet_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "IP"
-
-			static int ip_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "Ip Option"
-
-			static int ip_option_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "ICMP"
-
-			static int icmp_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "UDP"
-
-			static int udp_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "TCP"
-
-			static int tcp_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "TCP Option"
-
-			static int tcp_option_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "ARP"
-
-			static int arp_remove(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "Payload"
-
-			static int payload_remove(t_packet *packet) {
-				if (!packet) return (1);
+				ft_memcpy(packet + packet->packet_len, data, data_len);
+				packet->payload = packet + packet->packet_len;
+				packet->payload_len = data_len;
+				packet->packet_len += data_len;
 
 				return (0);
 			}
@@ -562,14 +375,14 @@
 			if (!packet || !data || !data_len) return (1);
 
 			switch (header_type) {
-				case ETHERNET:		return (ethernet_add(packet, data));	// 14 bytes
-				case IP:			return (ip_add(packet, data));			// 20 bytes
-				case IP_OPTION:		return (ip_option_add(packet, data));	// 0/40 bytes
-				case ICMP:			return (icmp_add(packet, data));		// 8 bytes
-				case UDP:			return (udp_add(packet, data));			// 8 bytes
-				case TCP:			return (tcp_add(packet, data));			// 20 bytes
-				case TCP_OPTION:	return (tcp_option_add(packet, data));	// 0/40 bytes
-				case ARP:			return (arp_add(packet, data));			// 28 bytes
+				case ETHERNET:		return (ethernet_add(packet, data));			// 14 bytes
+				case IP:			return (ip_add(packet, data));					// 20 bytes
+				case IP_OPTION:		return (ip_option_add(packet, data));			// 0/40 bytes
+				case ICMP:			return (icmp_add(packet, data));				// 8 bytes
+				case UDP:			return (udp_add(packet, data));					// 8 bytes
+				case TCP:			return (tcp_add(packet, data));					// 20 bytes
+				case TCP_OPTION:	return (tcp_option_add(packet, data));			// 0/40 bytes
+				case ARP:			return (arp_add(packet, data));					// 28 bytes
 				case PAYLOAD:		return (payload_add(packet, data, data_len));
 			}
 
@@ -578,24 +391,25 @@
 
 	#pragma endregion
 
-	#pragma region "Remove"
+	#pragma region "Clear"
 
-		int packet_remove(t_packet *packet, t_herdar_type header_type) {
+		int packet_clear(t_packet *packet) {
 			if (!packet) return (1);
 
-			switch (header_type) {
-				case ETHERNET:		return (ethernet_remove(packet));		// 14 bytes
-				case IP:			return (ip_remove(packet));				// 20 bytes
-				case IP_OPTION:		return (ip_option_remove(packet));		// 0/40 bytes
-				case ICMP:			return (icmp_remove(packet));			// 8 bytes
-				case UDP:			return (udp_remove(packet));			// 8 bytes
-				case TCP:			return (tcp_remove(packet));			// 20 bytes
-				case TCP_OPTION:	return (tcp_option_remove(packet));		// 0/40 bytes
-				case ARP:			return (arp_remove(packet));			// 28 bytes
-				case PAYLOAD:		return (payload_remove(packet));
-			}
+			ft_memset(packet, 0, 1500);
+			packet->ethernet_header = NULL;
+			packet->ip_header = NULL;
+			packet->ip_option = NULL;
+			packet->icmp_header = NULL;
+			packet->udp_header = NULL;
+			packet->tcp_header = NULL;
+			packet->tcp_option = NULL;
+			packet->arp_header = NULL;
+			packet->payload = NULL;
+			packet->payload_len = 0;
+			packet->packet_len = 0;
 
-			return (1);
+			return (0);
 		}
 
 	#pragma endregion

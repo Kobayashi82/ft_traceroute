@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:25:52 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 12:48:29 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/04 14:16:56 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@
 #pragma region "Methods"
 
 	int	packet_add(t_packet *packet, void *data, uint32_t data_len, t_herdar_type header_type);
-	int	packet_remove(t_packet *packet, t_herdar_type header_type);;
-	int	packet_validate(t_packet *packet);;
-	int	packet_complete(t_packet *packet);;
+	int	packet_clear(t_packet *packet);
+	int	packet_validate(t_packet *packet);
+	int	packet_complete(t_packet *packet);
 
 #pragma endregion
