@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/04 11:22:27 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/07 11:43:07 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ NAME		= ft_traceroute
 # ── FLAGS ── #
 # ─────────── #
 
-CC			= gcc
+CC			= clang
 CFLAGS		= -Wall -Wextra -Werror -O2
 
 # ───────────────── #
