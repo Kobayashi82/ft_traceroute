@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:22:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 14:32:10 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/10 19:58:28 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@
 
 				if (packet->ip_header || packet->ip_option || packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, sizeof(t_ip_header));
-				packet->ip_header = (t_ip_header *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, sizeof(t_ip_header));
+				packet->ip_header = (t_ip_header *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += sizeof(t_ip_header);
 
 				return (0);
@@ -74,11 +74,19 @@
 				if (packet->ip_option || packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
 				uint8_t option_len = ((t_ip_option *)data)->length;
-				// validar option_len y return 1 si no multiple de 4;
+				if (!option_len) return (1);
+				if (option_len % 4 || ((t_ip_option *)data)->options[option_len - 1] != EOOL) {
+					option_finalize((t_ip_option *)data);
+					option_len = ((t_ip_option *)data)->length;
+				}
 
-				ft_memcpy(packet + packet->packet_len, data, option_len);
-				packet->ip_option = (t_ip_option *)(packet + packet->packet_len);
-				packet->packet_len += option_len;
+				uint8_t	total_oct = ((option_len + 3) / 4);
+
+				ip_set_ihl(packet->ip_header, 5 + total_oct);
+
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, total_oct * 4);
+				packet->ip_option = (t_ip_option *)((uint8_t *)packet + packet->packet_len);
+				packet->packet_len += total_oct * 4;
 
 				return (0);
 			}
@@ -94,8 +102,8 @@
 				if (packet->ip_option && !packet->ip_header) return (1);
 				if (packet->icmp_header || packet->udp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, sizeof(t_icmp_header));
-				packet->icmp_header = (t_icmp_header *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, sizeof(t_icmp_header));
+				packet->icmp_header = (t_icmp_header *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += sizeof(t_icmp_header);
 
 				return (0);
@@ -112,8 +120,8 @@
 				if (packet->ip_option && !packet->ip_header) return (1);
 				if (packet->udp_header || packet->icmp_header || packet->tcp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, sizeof(t_udp_header));
-				packet->udp_header = (t_udp_header *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, sizeof(t_udp_header));
+				packet->udp_header = (t_udp_header *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += sizeof(t_udp_header);
 
 				return (0);
@@ -130,8 +138,8 @@
 				if (packet->ip_option && !packet->ip_header) return (1);
 				if (packet->tcp_header || packet->icmp_header || packet->udp_header || packet->tcp_option || packet->arp_header || packet->payload) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, sizeof(t_tcp_header));
-				packet->tcp_header = (t_tcp_header *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, sizeof(t_tcp_header));
+				packet->tcp_header = (t_tcp_header *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += sizeof(t_tcp_header);
 
 				return (0);
@@ -150,8 +158,8 @@
 				uint8_t option_len = ((t_tcp_option *)data)->length;
 				// validar option_len y return 1 si no multiple de 4;
 
-				ft_memcpy(packet + packet->packet_len, data, option_len);
-				packet->tcp_option = (t_tcp_option *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, option_len);
+				packet->tcp_option = (t_tcp_option *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += option_len;
 
 				return (0);
@@ -166,8 +174,8 @@
 
 				if (packet->arp_header || packet->ip_header || packet->ip_option || packet->icmp_header || packet->tcp_header || packet->tcp_option || packet->payload) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, sizeof(t_arp_header));
-				packet->arp_header = (t_arp_header *)(packet + packet->packet_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, sizeof(t_arp_header));
+				packet->arp_header = (t_arp_header *)((uint8_t *)packet + packet->packet_len);
 				packet->packet_len += sizeof(t_arp_header);
 
 				return (0);
@@ -183,7 +191,7 @@
 				if (packet->packet_len + data_len >= MAX_PACKET_LEN) return (1);
 				if (packet->payload || (!packet->icmp_header && !packet->udp_header && !packet->tcp_option)) return (1);
 
-				ft_memcpy(packet + packet->packet_len, data, data_len);
+				ft_memcpy((uint8_t *)packet + packet->packet_len, data, data_len);
 				packet->payload = packet + packet->packet_len;
 				packet->payload_len = data_len;
 				packet->packet_len += data_len;

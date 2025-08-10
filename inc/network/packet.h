@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:25:52 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 14:16:56 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/10 18:42:40 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #pragma region "Includes"
 
 	#include "network/frame/ethernet.h"
-	#include "network/frame/ipv4.h"
+	#include "network/frame/ip.h"
 	#include "network/frame/icmp.h"
 	#include "network/frame/udp.h"
 	#include "network/frame/tcp.h"

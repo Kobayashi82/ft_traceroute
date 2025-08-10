@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ipv4.c                                             :+:      :+:    :+:   */
+/*   ip.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 12:30:34 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/10 20:56:48 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,16 @@
     │                                  Destination Address                                  │
     ├───────────────────────────────────────────────────────────────────────────────────────┤
     │                                                                                       │
-    │                        Options (if IHL > 5) - Not implemented                         │
+    │                                        Options                                        │
     │                                                                                       │
     └───────────────────────────────────────────────────────────────────────────────────────┘
+    * Fragmentation not supported... for now
 */
 
 #pragma region "Includes"
 
-	#include "network/frame/ipv4.h"
+	#include "network/frame/ip.h"
+	#include "utils/utils.h"
 
 #pragma endregion
 
@@ -52,7 +54,159 @@
 
 #pragma endregion
 
+#pragma region "Options"
+
+	#pragma region "Internal"
+
+		#pragma region "Finalize"
+
+			int option_finalize(t_ip_option *opt) {
+				if (!opt || opt->length >= sizeof(opt->options)) return (1);
+
+				uint8_t len = opt->length;
+
+				opt->options[len++] = EOOL;
+				while ((opt->length + len) % 4 && opt->length + len < sizeof(opt->options))
+					opt->options[len++] = NOP;
+
+				return (0);
+			}
+
+		#pragma endregion
+
+		#pragma region "Initialize"
+
+			int option_initialize(t_ip_option *opt) {
+				if (!opt) return (1);
+
+				ft_memset(opt, 0, sizeof(t_ip_option));
+
+				return (0);
+			}
+
+		#pragma endregion
+
+		#pragma region "Set"
+
+			int option_set(t_ip_option *opt, uint8_t type, uint8_t len, const uint8_t *data) {
+				if (!opt) return (1);
+
+				if (!opt->length) option_initialize(opt);
+
+				if (type == EOOL || type == NOP) {
+					if (opt->length + 1 > sizeof(opt->options)) return (1);
+					opt->options[opt->length++] = type;
+					return (0);
+				}
+
+				uint8_t total_len = 2 + len;
+				if ((len && !data) || opt->length + total_len > sizeof(opt->options)) return (1);
+				opt->options[opt->length] = type;
+				opt->options[opt->length + 1] = total_len;
+				if (data && len > 0) ft_memcpy(&opt->options[opt->length + 2], data, len);
+
+				opt->length += total_len;
+
+				if (opt->length % 4 || ((t_ip_option *)data)->options[opt->length - 1] != EOOL)
+					return (option_finalize(opt));
+
+				return (0);
+			}
+
+		#pragma endregion
+
+	#pragma endregion
+
+	#pragma region "Predefined"
+
+		#pragma region "No Operation (NOP)"
+
+			int option_set_nop(t_ip_option *opt) {
+				if (!opt) return (1);
+
+				return (option_set(opt, NOP, 0, NULL));
+			}
+
+		#pragma endregion
+
+		#pragma region "End of Option List (EOOL)"
+
+			int option_set_eool(t_ip_option *opt) {
+				if (!opt) return (1);
+
+				return (option_set(opt, EOOL, 0, NULL));
+			}
+
+		#pragma endregion
+
+		#pragma region "TimeStamp (TS)"
+
+			int option_timestamp_create(t_ip_option *opt, uint8_t num_timestamps, uint8_t flags) {
+				if (!opt || !num_timestamps || num_timestamps > MAX_TIMESTAMPS) return (1);
+
+				uint8_t entry_size = (flags == 1) ? 8 : 4;			// IP + timestamp o solo timestamp
+				uint8_t len = 4 + (num_timestamps * entry_size);	// total len: header(4) + timestamps
+
+				if (len > sizeof(opt->options)) return (1);
+
+				uint8_t data[38];
+				ft_memset(data, 0, sizeof(data));
+
+				data[0] = 5;										// Pointer (primer timestamp empieza en byte 5)
+				data[1] = flags & 0xF;								// Flags (4 bits bajo), overflow (4 bits alto) 0
+
+				return (option_set(opt, TS, len - 2, data));
+			}
+
+
+		#pragma endregion
+
+		#pragma region "Record Route (RR)"
+
+			int option_set_record_route(t_ip_option *opt, uint8_t num_addresses) {
+				if (!opt || !num_addresses || num_addresses > MAX_RR_ADDRESSES) return (1);
+
+				uint8_t len = 3 + (num_addresses * 4);
+
+				if (len > sizeof(opt->options)) return (1);
+
+				uint8_t data[38];
+				ft_memset(data, 0, sizeof(data));
+				data[0] = 4;       					// pointer start at byte 4 (first address)
+
+				return (option_set(opt, RR, len - 2, data));
+			}
+
+		#pragma endregion
+
+		#pragma region "Router Alert (RTRALT)"
+
+			int option_set_router_alert(t_ip_option *opt, uint16_t alert_value) {
+				if (!opt) return (1);
+
+				uint16_t be_value = htons(alert_value);
+				return option_set(opt, RTRALT, sizeof(be_value), (uint8_t *)&be_value);
+			}
+
+		#pragma endregion
+
+	#pragma endregion
+
+#pragma endregion
+
 #pragma region "Set"
+
+	#pragma region "Ver/IHL"
+
+		int ip_set_ihl(t_ip_header *header, uint8_t ihl) {
+			if (!header || ihl < 5 || ihl > 15) return (1);
+
+			header->ver_ihl = (VERSION << 4) | (ihl & 0x0F);
+
+			return (0);
+		}
+
+	#pragma endregion
 
 	#pragma region "DSCP/ECN"
 
@@ -243,7 +397,7 @@
 	int create_ip_header(t_ip_header *header, uint8_t dscp, uint8_t ecn, uint16_t data_len, uint16_t id, uint8_t frag_df, uint8_t frag_mf, uint16_t frag_offset, uint8_t ttl, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr) {
 		if (!header || dscp > 63 || ecn > 3) return (1);
 
-		header->ver_ihl = VER_IHL;
+		ip_set_ihl(header, IHL);
 		header->dscp_ecn = ((dscp & DSCP_MASK) << 2) | (ecn & ECN_MASK);
 		header->length = htons(sizeof(t_ip_header) + data_len);
 		header->id = htons(id);

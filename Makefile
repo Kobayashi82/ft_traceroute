@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/07 11:43:07 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/10 18:32:47 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ SRC_DIR		= src/
 SRCS		= main/main.c main/options.c			\
 													\
 			  network/frame/ethernet.c				\
-			  network/frame/ipv4.c					\
+			  network/frame/ip.c					\
 			  network/frame/icmp.c					\
 			  network/frame/udp.c					\
 			  network/frame/tcp.c					\
