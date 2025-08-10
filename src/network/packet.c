@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:22:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 19:58:28 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/10 21:01:32 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@
 				}
 
 				uint8_t	total_oct = ((option_len + 3) / 4);
-
 				ip_set_ihl(packet->ip_header, 5 + total_oct);
 
 				ft_memcpy((uint8_t *)packet + packet->packet_len, data, total_oct * 4);
