@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 21:03:28 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:58:20 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 	int	tcp_set_data_length(t_tcp_header *header, uint16_t data_len);
 	int	tcp_set_length(t_tcp_header *header, uint16_t length);
 	int	tcp_set_checksum(t_tcp_header *header, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data);
-	int	tcp_create_header_checksum(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data);
-	int	tcp_create_header(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint16_t length);
+
+	// int	tcp_create_header(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint16_t length);
 
 #pragma endregion

@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:25:52 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 18:42:40 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 13:56:33 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,11 @@
 
 #pragma region "Methods"
 
+	int	icmp_complete(t_packet *packet);
+	int	udp_complete(t_packet *packet, uint32_t src_addr, uint32_t dst_addr);
+	int	tcp_complete(t_packet *packet, uint32_t src_addr, uint32_t dst_addr);
+
 	int	packet_add(t_packet *packet, void *data, uint32_t data_len, t_herdar_type header_type);
 	int	packet_clear(t_packet *packet);
-	int	packet_validate(t_packet *packet);
-	int	packet_complete(t_packet *packet);
 
 #pragma endregion

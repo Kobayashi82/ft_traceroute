@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 20:59:23 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:58:00 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,31 +125,17 @@
 
 #pragma endregion
 
-#pragma region "Create with Checksum"
-
-	int tcp_create_header_checksum(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint32_t src_addr, uint32_t dst_addr, uint16_t data_len, const void *data) {
-		if (!header) return (1);
-		if (!data) data_len = 0;
-
-		header->src_port = htons(src_port);
-		header->dst_port = htons(dst_port);
-
-		return (tcp_set_checksum(header, src_addr, dst_addr, data_len, data));
-	}
-
-#pragma endregion
-
 #pragma region "Create"
 
-	int tcp_create_header(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint16_t data_len) {
-		if (!header || !dst_port ) return (1);
+	// int tcp_create_header(t_tcp_header *header, uint16_t src_port, uint16_t dst_port, uint32_t seq, uint32_t ack_num) {
+	// 	if (!header || !dst_port ) return (1);
 
-		header->src_port = htons(src_port);
-		header->dst_port = htons(dst_port);
-		header->length = htons(sizeof(t_tcp_header) + data_len);
-		header->checksum = 0;
+	// 	header->src_port = htons(src_port);
+	// 	header->dst_port = htons(dst_port);
+	// 	header->length = htons(sizeof(t_tcp_header) + data_len);
+	// 	header->checksum = 0;
 
-		return (0);
-	}
+	// 	return (0);
+	// }
 
 #pragma endregion

@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 11:22:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 21:01:32 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 14:05:49 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,22 @@
 
 	#include "network/packet.h"
 	#include "utils/utils.h"
+
+#pragma endregion
+
+#pragma region "Checksum"
+
+	static unsigned short checksum(void *data, int len) {
+		unsigned long	sum = 0;
+		unsigned short	*buf = data;
+
+		while (len > 1) { sum += *buf++; len -= 2; }
+		if (len == 1) sum += *(unsigned char *)buf;
+		sum = (sum >> 16) + (sum & 0xFFFF);
+		sum += (sum >> 16);
+
+		return (unsigned short)(~sum);
+	}
 
 #pragma endregion
 
@@ -204,30 +220,28 @@
 
 	#pragma region "Validate"
 
-		#pragma region "Ethernet"
-
-			static int ethernet_validate(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
 		#pragma region "IP"
 
-			static int ip_validate(t_packet *packet) {
-				if (!packet) return (1);
+			static int ip_option_validate(t_packet *packet) {
+				if (!packet || !packet->ip_option) return (0);
+
+				if (!packet->ip_header) return (1);
+				// invalid options
 
 				return (0);
 			}
 
-		#pragma endregion
+			int ip_validate(t_packet *packet) {
+				if (!packet || !packet->ip_header) return (0);
 
-		#pragma region "IP Option"
+				// invalid ver and ihl
+				// invalid dscp/ecn
+				// total length < ip header
+				// invalid protocol
+				// invalid src addr
+				// invalid dst addr
 
-			static int ip_option_validate(t_packet *packet) {
-				if (!packet) return (1);
+				ip_option_validate(packet);
 
 				return (0);
 			}
@@ -236,9 +250,11 @@
 
 		#pragma region "ICMP"
 
-			static int icmp_validate(t_packet *packet) {
+			int icmp_validate(t_packet *packet) {
 				if (!packet) return (1);
 
+				// dst port
+				// 
 				return (0);
 			}
 
@@ -246,7 +262,7 @@
 
 		#pragma region "UDP"
 
-			static int udp_validate(t_packet *packet) {
+			int udp_validate(t_packet *packet) {
 				if (!packet) return (1);
 
 				return (0);
@@ -256,18 +272,16 @@
 
 		#pragma region "TCP"
 
-			static int tcp_validate(t_packet *packet) {
+			static int tcp_option_validate(t_packet *packet) {
 				if (!packet) return (1);
 
 				return (0);
 			}
 
-		#pragma endregion
-
-		#pragma region "TCP Option"
-
-			static int tcp_option_validate(t_packet *packet) {
+			int tcp_validate(t_packet *packet) {
 				if (!packet) return (1);
+
+				tcp_option_validate(packet);
 
 				return (0);
 			}
@@ -276,8 +290,13 @@
 
 		#pragma region "ARP"
 
-			static int arp_validate(t_packet *packet) {
-				if (!packet) return (1);
+			int arp_validate(t_packet *packet) {
+				if (!packet || !packet->arp_header) return (0);
+
+				if (!packet->ethernet_header) return (1);
+				if (packet->ethernet_header->ethertype != ETH_P_ARP) return (1);
+				if (packet->arp_header->sha != packet->ethernet_header->src_mac) return (1);
+				if (packet->arp_header->oper == ARPOP_REPLY && packet->arp_header->tha != packet->ethernet_header->dst_mac) return (1);
 
 				return (0);
 			}
@@ -288,30 +307,22 @@
 
 	#pragma region "Complete"
 
-		#pragma region "Ethernet"
-
-			static int ethernet_complete(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
 		#pragma region "IP"
 
 			static int ip_complete(t_packet *packet) {
-				if (!packet) return (1);
+				if (!packet || !packet->ip_header) return (0);
 
-				return (0);
-			}
+				uint16_t total_len = packet->packet_len;
 
-		#pragma endregion
+				if (packet->ethernet_header) total_len -= sizeof(t_ethernet_header);
+				packet->ip_header->length = htons(total_len);
+				packet->ip_header->checksum = 0;
 
-		#pragma region "IP Option"
+				uint8_t	total_oct = 0;
+				if (packet->ip_option) total_oct = ((packet->ip_option->length + 3) / 4);
+				ip_set_ihl(packet->ip_header, 5 + total_oct);
 
-			static int ip_option_complete(t_packet *packet) {
-				if (!packet) return (1);
+				packet->ip_header->checksum = checksum(packet->ip_header, (5 + total_oct) * 4);
 
 				return (0);
 			}
@@ -320,50 +331,45 @@
 
 		#pragma region "ICMP"
 
-			static int icmp_complete(t_packet *packet) {
-				if (!packet) return (1);
+			int icmp_complete(t_packet *packet) {
+				if (!packet || !packet->icmp_header) return (1);
 
-				return (0);
+				ip_complete(packet);
+				packet->icmp_header->checksum = 0;
+				packet->icmp_header->checksum = checksum(packet->icmp_header, sizeof(t_icmp_header) + packet->payload_len);
+
+				return (icmp_validate(packet));
 			}
 
 		#pragma endregion
 
 		#pragma region "UDP"
 
-			static int udp_complete(t_packet *packet) {
-				if (!packet) return (1);
+			int udp_complete(t_packet *packet, uint32_t src_addr, uint32_t dst_addr) {
+				if (!packet || !packet->udp_header) return (1);
 
-				return (0);
+				ip_complete(packet);
+
+				packet->udp_header->length = htons(sizeof(t_udp_header) + packet->payload_len);
+				packet->udp_header->checksum = 0;
+				udp_set_checksum(packet->udp_header, src_addr, dst_addr, packet->payload_len, packet->payload);
+
+				return (udp_validate(packet));
 			}
 
 		#pragma endregion
 
 		#pragma region "TCP"
 
-			static int tcp_complete(t_packet *packet) {
-				if (!packet) return (1);
+			int tcp_complete(t_packet *packet, uint32_t src_addr, uint32_t dst_addr) {
+				if (!packet || !packet->tcp_header) return (1);
 
-				return (0);
-			}
+				ip_complete(packet);
+				packet->tcp_header->length = htons(sizeof(t_tcp_header) + packet->payload_len);
+				packet->tcp_header->checksum = 0;
+				tcp_set_checksum(packet->tcp_header, src_addr, dst_addr, packet->payload_len, packet->payload);
 
-		#pragma endregion
-
-		#pragma region "TCP Option"
-
-			static int tcp_option_complete(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
-			}
-
-		#pragma endregion
-
-		#pragma region "ARP"
-
-			static int arp_complete(t_packet *packet) {
-				if (!packet) return (1);
-
-				return (0);
+				return (tcp_validate(packet));
 			}
 
 		#pragma endregion
@@ -413,46 +419,6 @@
 			packet->payload = NULL;
 			packet->payload_len = 0;
 			packet->packet_len = 0;
-
-			return (0);
-		}
-
-	#pragma endregion
-
-	#pragma region "Validate"
-
-		// Check lengths, checksum and correct values
-		int packet_validate(t_packet *packet) {
-			if (!packet) return (1);
-			
-			ethernet_validate(packet);
-			ip_validate(packet);
-			ip_option_validate(packet);
-			icmp_validate(packet);
-			udp_validate(packet);
-			tcp_validate(packet);
-			tcp_option_validate(packet);
-			arp_validate(packet);
-
-			return (0);
-		}
-
-	#pragma endregion
-
-	#pragma region "Complete"
-
-		// Set lengths, calculate checksum and validate
-		int packet_complete(t_packet *packet) {
-			if (!packet) return (1);
-
-			ethernet_complete(packet);
-			ip_complete(packet);
-			ip_option_complete(packet);
-			icmp_complete(packet);
-			udp_complete(packet);
-			tcp_complete(packet);
-			tcp_option_complete(packet);
-			arp_complete(packet);
 
 			return (0);
 		}
