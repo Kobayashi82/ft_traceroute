@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 22:27:45 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/01 19:17:46 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 17:27:51 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,34 +34,62 @@
 #pragma region "Help"
 
 	static int help() {
-		fprintf(stderr, "Usage: ft_ping [OPTION...] HOST ...\n");
-		fprintf(stderr, "Send ICMP ECHO_REQUEST packets to network hosts.\n");
+		fprintf(stderr, "Usage:\n");
+		fprintf(stderr, "  ft_traceroute [ -dFITnrUV ] [ -f first_ttl ] [ -i device ] [ -m max_ttl ] [ -N squeries ] [ -p port ] [ -t tos ] [ -w MAX,HERE,NEAR ] [ -q nqueries ] [ -s src_addr ] [ -z sendwait ] host [ packetlen ]\n");
+		fprintf(stderr, "Options:\n");
+		fprintf(stderr, "  -d  --debug                 Enable socket level debugging\n");
+		fprintf(stderr, "  -f first_ttl  --first=first_ttl\n");
+		fprintf(stderr, "                              Start from the first_ttl hop (instead from 1)\n");
+		fprintf(stderr, "  -I  --icmp                  Use ICMP ECHO for tracerouting\n");
+		fprintf(stderr, "  -T  --tcp                   Use TCP SYN for tracerouting (default port is 80)\n");
+		fprintf(stderr, "  -i device  --interface=device\n");
+		fprintf(stderr, "                              Specify a network interface to operate with\n");
+		fprintf(stderr, "  -m max_ttl  --max-hops=max_ttl\n");
+		fprintf(stderr, "                              Set the max number of hops (max TTL to be\n");
+		fprintf(stderr, "                              reached). Default is 30\n");
+		fprintf(stderr, "  -N squeries  --sim-queries=squeries\n");
+		fprintf(stderr, "                              Set the number of probes to be tried\n");
+		fprintf(stderr, "                              simultaneously (default is 16)\n");
+		fprintf(stderr, "  -n                          Do not resolve IP addresses to their domain names\n");
+		fprintf(stderr, "  -p port  --port=port        Set the destination port to use. It is either\n");
+		fprintf(stderr, "                              initial udp port value for \"default\" method\n");
+		fprintf(stderr, "                              (incremented by each probe, default is 33434), or\n");
+		fprintf(stderr, "                              initial seq for \"icmp\" (incremented as well,\n");
+		fprintf(stderr, "                              default from 1), or some constant destination\n");
+		fprintf(stderr, "                              port for other methods (with default of 80 for\n");
+		fprintf(stderr, "                              \"tcp\", 53 for \"udp\", etc.)\n");
+		fprintf(stderr, "  -t tos  --tos=tos           Set the TOS (IPv4 type of service)\n");
+		fprintf(stderr, "  -w MAX,HERE,NEAR  --wait=MAX,HERE,NEAR\n");
+		fprintf(stderr, "                              Wait for a probe no more than HERE (default 3)\n");
+		fprintf(stderr, "                              times longer than a response from the same hop,\n");
+		fprintf(stderr, "                              or no more than NEAR (default 10) times than some\n");
+		fprintf(stderr, "                              next hop, or MAX (default 5.0) seconds (float\n");
+		fprintf(stderr, "                              point values allowed too)\n");
+		fprintf(stderr, "  -q nqueries  --queries=nqueries\n");
+		fprintf(stderr, "                              Set the number of probes per each hop. Default is\n");
+		fprintf(stderr, "                              3\n");
+		fprintf(stderr, "  -r                          Bypass the normal routing and send directly to a\n");
+		fprintf(stderr, "                              host on an attached network\n");
+		fprintf(stderr, "  -s src_addr  --source=src_addr\n");
+		fprintf(stderr, "                              Use source src_addr for outgoing packets\n");
+		fprintf(stderr, "  -z sendwait  --sendwait=sendwait\n");
+		fprintf(stderr, "                              Minimal time interval between probes (default 0).\n");
+		fprintf(stderr, "                              If the value is more than 10, then it specifies a\n");
+		fprintf(stderr, "                              number in milliseconds, else it is a number of\n");
+		fprintf(stderr, "                              seconds (float point values allowed too)\n");
+		fprintf(stderr, "  --fwmark=num                Set firewall mark for outgoing packets\n");
+		fprintf(stderr, "  -U  --udp                   Use UDP to particular port for tracerouting\n");
+		fprintf(stderr, "                              (instead of increasing the port per each probe),\n");
+		fprintf(stderr, "                              default port is 53\n");
 		fprintf(stderr, "\n");
-		fprintf(stderr, "  -c,  --count=NUM            stop after sending NUM packets\n");
-		fprintf(stderr, "  -d,  --debug                set the SO_DEBUG option (kernel-dependent)\n");
-		fprintf(stderr, "  -i,  --interval=NUM         wait NUM seconds between sending each packet\n");
-		fprintf(stderr, "  -n,  --numeric              do not resolve host addresses\n");
-		fprintf(stderr, "  -r,  --ignore-routing       send directly to a host on an attached network\n");
-		fprintf(stderr, "       --ttl=N                specify N as time-to-live\n");
-		fprintf(stderr, "  -T,  --tos=NUM              set type of service (TOS) to NUM (often ignored)\n");
-		fprintf(stderr, "                                 - Low Delay:              16\n");
-		fprintf(stderr, "                                 - High Reliability:       4\n");
-		fprintf(stderr, "                                 - High Throughput:        8\n");
-		fprintf(stderr, "                                 - High Priority:          136\n");
-		fprintf(stderr, "                                 - Expedited Forwarding:   184\n");
-		fprintf(stderr, "  -v,  --verbose              verbose output\n");
-		fprintf(stderr, "  -w,  --timeout=NUM          stop after NUM seconds\n");
-		fprintf(stderr, "  -W,  --linger=NUM           number of seconds to wait for response\n");
-		fprintf(stderr, "  -p,  --pattern=PATTERN      fill ICMP packet with given pattern (hex)\n");
-		fprintf(stderr, "  -q,  --quiet                quiet output\n");
-		fprintf(stderr, "  -s,  --size=NUM             send NUM data octets\n");
+		fprintf(stderr, "  -V  --version               Print version info and exit\n");
+		fprintf(stderr, "  --help                      Read this help and exit\n");
 		fprintf(stderr, "\n");
-		fprintf(stderr, "  -h?, --help                 give this help list\n");
-		fprintf(stderr, "       --usage                give a short usage message\n");
-		fprintf(stderr, "  -V,  --version              print program version\n");
-		fprintf(stderr, "\n");
-		fprintf(stderr, "Mandatory or optional arguments to long options are also mandatory or optional\n");
-		fprintf(stderr, "for any corresponding short options.\n");
+		fprintf(stderr, "Arguments:\n");
+		fprintf(stderr, "+     host          The host to traceroute to\n");
+		fprintf(stderr, "      packetlen     The full packet length (default is the length of an IP\n");
+		fprintf(stderr, "                    header plus 40). Can be ignored or increased to a minimal\n");
+		fprintf(stderr, "                    allowed value\n");
 		fprintf(stderr, "\n");
 		fprintf(stderr, "Report bugs to <kobayashi82@outlook.com>.\n");
 
@@ -73,13 +101,13 @@
 #pragma region "Usage"
 
 	static int usage() {
-		fprintf(stderr, "Usage: ft_ping [-c NUM, --count=NUMBER] [-i NUM, --interval=NUM]\n");
-		fprintf(stderr, "               [-w NUM, --timeout=NUM]  [-W NUM, --linger=NUM]\n");
-		fprintf(stderr, "               [-s NUM, --size=NUM]     [-p PATTERN, --pattern=PATTERN]\n");
-		fprintf(stderr, "               [-T NUM, --tos=NUM]      [-r, --ignore-routing] [--ttl=NUM]\n");
-		fprintf(stderr, "               [-d, --debug] [-n, --numeric] [-v, --verbose] [-q, --quiet]\n");
-		fprintf(stderr, "               [-h?, --help] [-u, --usage]   [-V, --version]\n");
-		fprintf(stderr, "               HOST ...\n");
+		fprintf(stderr, "Usage: ft_traceroute [-c NUM, --count=NUMBER] [-i NUM, --interval=NUM]\n");
+		fprintf(stderr, "                     [-w NUM, --timeout=NUM]  [-W NUM, --linger=NUM]\n");
+		fprintf(stderr, "                     [-s NUM, --size=NUM]     [-p PATTERN, --pattern=PATTERN]\n");
+		fprintf(stderr, "                     [-T NUM, --tos=NUM]      [-r, --ignore-routing] [--ttl=NUM]\n");
+		fprintf(stderr, "                     [-d, --debug] [-n, --numeric] [-v, --verbose] [-q, --quiet]\n");
+		fprintf(stderr, "                     [-h?, --help] [-u, --usage]   [-V, --version]\n");
+		fprintf(stderr, "                     HOST ...\n");
 
 		return (1);
 	}
@@ -89,7 +117,7 @@
 #pragma region "Version"
 
 	static int version() {
-		fprintf(stderr, "ft_ping 1.0 (based on ping GNU inetutils 2.0).\n");
+		fprintf(stderr, "ft_traceroute 1.0 (based on traceroute 2.1.5).\n");
 		fprintf(stderr, "Copyright (C) 2025 Kobayashi Corp ⓒ.\n");
 		fprintf(stderr, "License WTFPL: DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE.\n");
 		fprintf(stderr, "This is free software: you are free to change and redistribute it.\n");
