@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:33:27 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:29:23 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@
 	int	arp_set_tha(t_arp_header *header, const uint8_t *tha);
 	int	arp_set_tpa(t_arp_header *header, uint32_t tpa);
 
-	int arp_create_header(t_arp_header *header, uint16_t oper, const uint8_t *sha, uint32_t spa, const uint8_t *tha, uint32_t tpa);
+	int arp_create_header(t_arp_header *header, const uint8_t *sha, uint32_t spa, const uint8_t *tha, uint32_t tpa);
 
 #pragma endregion

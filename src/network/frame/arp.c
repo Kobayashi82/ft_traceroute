@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/03 22:44:10 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:48:17 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@
 		int arp_set_spa(t_arp_header *header, uint32_t spa) {
 			if (!header) return (1);
 
-			header->spa = htons(spa);
+			header->spa = spa;
 
 			return (0);
 		}
@@ -159,7 +159,7 @@
 		int arp_set_tpa(t_arp_header *header, uint32_t tpa) {
 			if (!header) return (1);
 
-			header->tpa = htons(tpa);
+			header->tpa = tpa;
 
 			return (0);
 		}
@@ -170,14 +170,14 @@
 
 #pragma region "Create"
 
-	int arp_create_header(t_arp_header *header, uint16_t oper, const uint8_t *sha, uint32_t spa, const uint8_t *tha, uint32_t tpa) {
-		if (!header || (oper != ARPOP_REQUEST && oper != ARPOP_REPLY)) return (1);
+	int arp_create_header(t_arp_header *header, const uint8_t *sha, uint32_t spa, const uint8_t *tha, uint32_t tpa) {
+		if (!header) return (1);
 
 		header->htype = htons(1);						// Ethernet = 1
 		header->ptype = htons(ETH_P_IP);				// IPv4
 		header->hlen = 6;								// MAC length = 6
 		header->plen = 4;								// IP length = 4
-		header->oper = htons(oper);						// Operation (Request = 1, Reply = 2)
+		header->oper = htons(ARPOP_REQUEST);			// Operation (Request = 1, Reply = 2)
 
 		ft_memcpy(header->sha, sha, 6);					// Sender MAC (spoofed)
 		header->spa = spa;								// Sender IP  (spoofed)

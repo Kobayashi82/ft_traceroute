@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 20:53:59 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:36:24 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,12 @@
 	int	option_finalize(t_ip_option *opt);
 	int	option_initialize(t_ip_option *opt);
 	int	option_set(t_ip_option *opt, uint8_t type, uint8_t len, const uint8_t *data);
+
+	int	option_set_nop(t_ip_option *opt);
+	int	option_set_eool(t_ip_option *opt);
+	int	option_timestamp_create(t_ip_option *opt, uint8_t num_timestamps, uint8_t flags);
 	int	option_set_record_route(t_ip_option *opt, uint8_t num_addresses);
+	int	option_set_router_alert(t_ip_option *opt, uint16_t alert_value);
 
 	int ip_set_ihl(t_ip_header *header, uint8_t ihl);
 	int	ip_set_tos(t_ip_header *header, uint8_t tos);
@@ -98,5 +103,6 @@
 	int	ip_set_dst_addr(t_ip_header *header, uint32_t dst_addr);
 
 	int create_ip_header(t_ip_header *header, uint8_t dscp, uint8_t ecn, uint16_t data_len, uint16_t id, uint8_t frag_df, uint8_t frag_mf, uint16_t frag_offset, uint8_t ttl, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr);
+	int create_ip_header_simple(t_ip_header *header, uint16_t data_len, uint16_t id, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr);
 
 #pragma endregion

@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:30 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/04 12:28:45 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 11:54:44 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,7 @@
 	int	icmp_set_gateway(t_icmp_header *header, uint32_t gateway);
 	int	icmp_set_mtu(t_icmp_header *header, uint16_t mtu);
 
-	int	icmp_create_echo(t_icmp_header *header, uint8_t type, uint16_t id, uint16_t seq);
-	int	icmp_create_dest_unreach(t_icmp_header *header, uint8_t code);
-	int	icmp_create_frag_needed(t_icmp_header *header, uint16_t mtu);
-	int	icmp_create_time_exceeded(t_icmp_header *header, uint8_t code);
-	int	icmp_create_redirect(t_icmp_header *header, uint8_t code, uint32_t gateway_addr);
-	int	icmp_create_param_problem(t_icmp_header *header, uint8_t code, uint8_t pointer);
-	int	icmp_create_source_quench(t_icmp_header *header);
-	int	icmp_create_timestamp(t_icmp_header *header, uint8_t type, uint16_t id, uint16_t seq);
-	int	icmp_create_info(t_icmp_header *header, uint8_t type, uint16_t id, uint16_t seq);
+	int	icmp_create_echo(t_icmp_header *header, uint16_t id, uint16_t seq);
+	int	icmp_create_timestamp(t_icmp_header *header, uint16_t id, uint16_t seq);
 
 #pragma endregion

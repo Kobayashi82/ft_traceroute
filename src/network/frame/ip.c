@@ -6,7 +6,7 @@
 /*   By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 19:22:05 by vzurera-          #+#    #+#             */
-/*   Updated: 2025/08/10 20:56:48 by vzurera-         ###   ########.fr       */
+/*   Updated: 2025/08/11 12:40:14 by vzurera-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@
 				uint8_t len = opt->length;
 
 				opt->options[len++] = EOOL;
-				while ((opt->length + len) % 4 && opt->length + len < sizeof(opt->options))
+				while (len % 4 && len < sizeof(opt->options))
 					opt->options[len++] = NOP;
 
 				return (0);
@@ -403,6 +403,25 @@
 		header->id = htons(id);
 		header->frag = htons(((frag_df & 1) << 14) | ((frag_mf & 1) << 13) | (frag_offset & FRAG_OFFSET_MASK));
 		header->ttl = ttl;
+		header->protocol = protocol;
+		header->checksum = 0;
+		header->src_addr = src_addr;
+		header->dst_addr = dst_addr;
+
+		header->checksum = htons(checksum(header, sizeof(t_ip_header)));
+
+		return (0);
+	}
+
+	int create_ip_header_simple(t_ip_header *header, uint16_t data_len, uint16_t id, uint8_t protocol, uint32_t src_addr, uint32_t dst_addr) {
+		if (!header) return (1);
+
+		ip_set_ihl(header, IHL);
+		header->dscp_ecn = 0;
+		header->length = htons(sizeof(t_ip_header) + data_len);
+		header->id = htons(id);
+		header->frag = htons(((1 & 1) << 14) | ((0 & 1) << 13) | (0 & FRAG_OFFSET_MASK));
+		header->ttl = 64;
 		header->protocol = protocol;
 		header->checksum = 0;
 		header->src_addr = src_addr;
