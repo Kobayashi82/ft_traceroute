@@ -6,7 +6,7 @@
 #    By: vzurera- <vzurera-@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/05 21:39:40 by vzurera-          #+#    #+#              #
-#    Updated: 2025/08/10 18:32:47 by vzurera-         ###   ########.fr        #
+#    Updated: 2025/08/11 19:34:20 by vzurera-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,7 +90,7 @@ _compile: $(OBJS)
 #	Create folder
 	@mkdir -p $(BLD_DIR)
 
-#	Compile library
+#	Compile
 	@printf "\r%50s\r\t$(CYAN)Compiling... $(YELLOW)$(NAME)$(NC)"
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lm 
 	@printf "\r%50s\r\t$(CYAN)Compiled    $(GREEN)✓ $(YELLOW)$(NAME)$(NC)\n"
@@ -167,7 +167,7 @@ re:
 		$(MAKE) -s _show_cursor; \
 	fi
 
-#	Delete objects and library
+#	Delete objects
 	@$(MAKE) -s _delete_objects
 	@if [ -f $(NAME) ]; then \
 		printf "\t$(CYAN)Deleting... $(YELLOW)$(NAME)$(NC)"; \
@@ -179,7 +179,7 @@ re:
 	@printf "\t$(WHITE)───────────────────────────\n$(NC)"
 	@printf "\033[1A\033[1A\r"
 
-#	Compile library
+#	Compile
 	@$(MAKE) -s _compile
 
 # ─────────── #
@@ -206,10 +206,10 @@ fclean:
 
 	@$(MAKE) -s _delete_objects
 	@if [ -f $(NAME) ]; then \
-		printf "\t$(CYAN)Deleting... $(YELLOW)library$(NC)"; \
+		printf "\t$(CYAN)Deleting... $(YELLOW)$(NAME)$(NC)"; \
 		rm -f $(NAME); \
 	fi
-	@printf "\r%50s\r\t$(CYAN)Deleted     $(GREEN)✓ $(YELLOW)library$(NC)\n"
+	@printf "\r%50s\r\t$(CYAN)Deleted     $(GREEN)✓ $(YELLOW)$(NAME)$(NC)\n"
 	@find $(BLD_DIR) -type d -empty -delete >/dev/null 2>&1 || true
 	@find  -type d -empty -delete >/dev/null 2>&1 || true
 
@@ -265,7 +265,7 @@ _delete_objects:
 
 wipe:
 	@rm -rf $(BLD_DIR)
-	@rm -rf 
+	@rm -rf $(NAME)
 
 # ─────────────────── #
 # ── PROGRESS LINE ── #
