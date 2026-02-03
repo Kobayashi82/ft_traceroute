@@ -9,6 +9,10 @@
 
 </div>
 
+<div align="center">
+  <img src="/ft_traceroute.png">
+</div>
+
 # ft_traceroute
 
 ## 🎯 Descripción
