@@ -17,19 +17,17 @@
 
 [README en Español](README_es.md)
 
-## 🎯 Description
-
-**ft_traceroute** is a from-scratch implementation of the `traceroute` command, an essential tool for diagnosing and analyzing network paths. This project explores IP routing behavior and network topology using advanced TTL (Time To Live) manipulation techniques.
+`ft_traceroute` is a from-scratch implementation of the `traceroute` command, an essential tool for diagnosing and analyzing network paths. This project explores IP routing behavior and network topology using advanced `TTL` (Time To Live) manipulation techniques.
 
 ### What is Traceroute?
 
 Traceroute is a network utility that:
 
-- **Maps the path** packets take from source to destination
-- **Identifies intermediate routers** (hops) along the way
-- **Measures latency** at each hop
-- **Diagnoses routing issues** and failure points
-- **Uses decreasing TTL** to reveal network topology
+- `Maps the path` packets take from source to destination
+- `Identifies intermediate routers` (hops) along the way
+- `Measures latency` at each hop
+- `Diagnoses routing issues` and failure points
+- `Uses decreasing TTL` to reveal network topology
 
 ### Technical Flow
 
@@ -49,25 +47,25 @@ TTL=3  [Cliente] -----> [Router1] -----> [Router2] -----> [Destino]
 
 #### Basic algorithm
 
-1. **Initialization**: Start with TTL = 1
-2. **Probe sending**: Send multiple packets (typically 3) with the same TTL
-3. **Receive replies**: 
+1. `Initialization`: Start with TTL = 1
+2. `Probe sending`: Send multiple packets (typically 3) with the same TTL
+3. `Receive replies`: 
   - ICMP Time Exceeded → Intermediate router identified
   - ICMP Echo Reply → Destination reached
-4. **TTL increment**: TTL++ for the next hop
-5. **Repeat**: Continue until destination or max TTL
+4. `TTL increment`: TTL++ for the next hop
+5. `Repeat`: Continue until destination or max TTL
 
 ### Probe types
 
 ft_traceroute can use different protocols for probes:
 
-| Protocol |  Port  |   Detection    |
-|-----------|----------|----------------|
-| **UDP**   | 33434+   | Port closed |
-| **ICMP**  | N/A      | Echo Reply     |
-| **TCP**   | Variable | SYN/ACK or RST  |
+| Protocol | Port     | Detection      |
+|----------|----------|----------------|
+| `UDP`    | 33434+   | Port closed    |
+| `ICMP`   | N/A      | Echo Reply     |
+| `TCP`    | Variable | SYN/ACK or RST |
 
-## 🔧 Build
+## 🔧 Installation
 
 ```bash
 git clone https://github.com/Kobayashi82/ft_traceroute.git
@@ -94,63 +92,63 @@ sudo setcap cap_net_raw+ep ./ft_traceroute
 sudo ./ft_traceroute [opciones] <destino> [packetlen]
 ```
 
-|  Argument  |     Type      |                     Description                      |         Example         |
-|-------------|---------------|------------------------------------------------------|-------------------------|
-| `destination`   | IPv4/Hostname | IP address or hostname                        | `8.8.8.8`, `google.com` |
-| `packetlen` | Number        | Packet length (default: IP header + 40 bytes) | `60`, `1500`            |
+| Argument      | Type          | Description                                   | Example                 |
+|---------------|---------------|------------------------------------------------------|------------------|
+| `destination` | IPv4/Hostname | IP address or hostname                        | `8.8.8.8`, `google.com` |
+| `packetlen`   | Number        | Packet length (default: IP header + 40 bytes) | `60`, `1500`            |
 
 #### Basic
-|   Option   | Long form |         Description          |
-|------------|-------------|------------------------------|
+| Option     | Long form   | Description            |
+|------------|-------------|------------------------|
 | `-h`, `-?` | `--help`    | Shows help information |
-| `-V`       | `--version` | Program version         |
-|            | `--usage`   | Short usage message         |
+| `-V`       | `--version` | Program version        |
+|            | `--usage`   | Short usage message    |
 
 #### Route control
-| Option |     Long form     | Parameter |                                             Description                                             |
-|--------|---------------------|-----------|-----------------------------------------------------------------------------------------------------|
-| `-m`   | `--max-hops=NUM`    | Number    | Maximum number of hops (default: 30)                                                               |
-| `-f`   | `--first-hop=NUM`   | Number    | Initial TTL (default: 1)                                                                            |
-| `-q`   | `--queries=NUM`     | Number    | Number of probes per hop (default: 3)                                                             |
-| `-w`   | `--wait=NUM`        | Seconds  | Wait time per reply (default: 5)                                                         |
-| `-N`   | `--sim-queries=NUM` | Number    | Number of simultaneous probes (default: 16)                                                          |
-| `-z`   | `--sendwait=NUM`    | Seconds  | Minimum interval between probes (default: 0). If NUM is greater than 10, it's treated as milliseconds |
+| Option | Long form           | Parameter | Description                                                                                           |
+|--------|---------------------|-----------|-------------------------------------------------------------------------------------------------------|
+| `-m`   | `--max-hops=NUM`    | Number    | Maximum number of hops (default: 30)                                                                  |
+| `-f`   | `--first-hop=NUM`   | Number    | Initial TTL (default: 1)                                                                              |
+| `-q`   | `--queries=NUM`     | Number    | Number of probes per hop (default: 3)                                                                 |
+| `-w`   | `--wait=NUM`        | Seconds   | Wait time per reply (default: 5)                                                                      |
+| `-N`   | `--sim-queries=NUM` | Number    | Number of simultaneous probes (default: 16)                                                           |
+| `-z`   | `--sendwait=NUM`    | Seconds   | Minimum interval between probes (default: 0). If NUM is greater than 10, it's treated as milliseconds |
 
 #### Probe configuration
-| Option |    Long form    | Parameter |                 Description                  |
-|--------|-------------------|-----------|----------------------------------------------|
-| `-p`   | `--port=NUM`      | Port    | Base port for UDP probes (default: 33434) |
-| `-s`   | `--source=ADDR`   | IP        | Source IP address                          |
-| `-t`   | `--tos=NUM`       | Number    | Type of Service (TOS)                        |
-| `-F`   | `--dont-fragment` | -         | Enables Don't Fragment flag                   |
+| Option | Long form         | Parameter | Description                               |
+|--------|-------------------|-----------|-------------------------------------------|
+| `-p`   | `--port=NUM`      | Port      | Base port for UDP probes (default: 33434) |
+| `-s`   | `--source=ADDR`   | IP        | Source IP address                         |
+| `-t`   | `--tos=NUM`       | Number    | Type of Service (TOS)                     |
+| `-F`   | `--dont-fragment` | -         | Enables Don't Fragment flag               |
 |
 
 #### Probe methods
-| Option | Long form |              Description              |
-|--------|-------------|---------------------------------------|
-| `-I`   | `--icmp`    | Uses ICMP Echo Request instead of UDP |
-| `-T`   | `--tcp`     | Uses TCP SYN probes               |
-| `-U`   | `--udp`     | Uses UDP (default behavior)  |
+| Option | Long form | Description                           |
+|--------|-----------|---------------------------------------|
+| `-I`   | `--icmp`  | Uses ICMP Echo Request instead of UDP |
+| `-T`   | `--tcp`   | Uses TCP SYN probes                   |
+| `-U`   | `--udp`   | Uses UDP (default behavior)           |
 
 #### Network options
-| Option |     Long form      |  Parameter  |                  Description                  |
-|--------|----------------------|-------------|-----------------------------------------------|
-| `-n`   | `--numeric`          | -           | Do not resolve IP addresses to names          |
-| `-d`   | `--debug`            | -           | Enables socket-level debugging           |
-| `-i`   | `--interface=DEVICE` | Device | Specifies network interface to use             |
-| `-r`   | -                    | -           | Bypass normal routing, send directly |
+| Option | Long form            | Parameter  | Description                          |
+|--------|----------------------|------------|--------------------------------------|
+| `-n`   | `--numeric`          | -          | Do not resolve IP addresses to names |
+| `-d`   | `--debug`            | -          | Enables socket-level debugging       |
+| `-i`   | `--interface=DEVICE` | Device     | Specifies network interface to use   |
+| `-r`   | -                    | -          | Bypass normal routing, send directly |
 
 #### TOS values (Type of Service)
 
 The `-t` option lets you configure the TOS field of the IP header:
 
-| Value |         Type         |    Description     |
-|-------|----------------------|--------------------|
-| 16    | Low Delay            | Low latency      |
-| 4     | High Reliability     | High reliability |
-| 8     | High Throughput      | High throughput   |
-| 136   | High Priority        | High priority     |
-| 184   | Expedited Forwarding | Expedited forwarding   |
+| Value | Type                 | Description          |
+|-------|----------------------|----------------------|
+| `16`  | Low Delay            | Low latency          |
+| `4`   | High Reliability     | High reliability     |
+| `8`   | High Throughput      | High throughput      |
+| `136` | High Priority        | High priority        |
+| `184` | Expedited Forwarding | Expedited forwarding |
 
 ## 📡 Internal behavior
 
@@ -189,22 +187,22 @@ struct icmp_time_exceeded {
 ```
 
 #### Destination Unreachable (Type 3)
-| Code |      Description       |               Meaning                |
-| ------ | ---------------------- | ---------------------------------------- |
-| 0      | Network Unreachable    | Network unreachable                        |
-| 1      | Host Unreachable       | Host unreachable                       |
-| 2      | Protocol Unreachable   | Protocol not supported                   |
-| 3      | Port Unreachable       | Port closed (UDP traceroute)          |
-| 4      | Fragmentation Required | Fragmentation required but DF set |
+| Code | Description            | Meaning                           |
+|------|------------------------|-----------------------------------|
+| `0`  | Network Unreachable    | Network unreachable               |
+| `1`  | Host Unreachable       | Host unreachable                  |
+| `2`  | Protocol Unreachable   | Protocol not supported            |
+| `3`  | Port Unreachable       | Port closed (UDP traceroute)      |
+| `4`  | Fragmentation Required | Fragmentation required but DF set |
 
 ### Completion detection
 
 The trace ends when:
 
-1. **Echo Reply received** (for ICMP traceroute)
-2. **Port Unreachable** (for UDP traceroute)
-3. **TCP SYN/ACK** or **RST** (for TCP traceroute)
-4. **Max TTL reached** (timeout or limit)
+1. `Echo Reply received` (for ICMP traceroute)
+2. `Port Unreachable` (for UDP traceroute)
+3. `TCP SYN/ACK` or `RST` (for TCP traceroute)
+4. `Max TTL reached` (timeout or limit)
 
 ## 🗺️ Interpreting Results
 
@@ -220,13 +218,13 @@ traceroute to google.com (142.250.185.14), 30 hops max, 60 byte packets
 
 ### Symbol interpretation
 
-| Symbol |       Meaning        |            Likely cause            |
-| ------- | ------------------------ | ------------------------------------ |
-| `*`     | No reply            | Firewall, silent router, timeout |
-| `!H`    | Host Unreachable         | Destination unreachable                |
-| `!N`    | Network Unreachable      | Network missing or not routed          |
-| `!P`    | Protocol Unreachable     | Protocol blocked                  |
-| `!X`    | Communication Prohibited | Administrative filtering              |
+| Symbol | Meaning                  | Likely cause                     |
+|--------|--------------------------|----------------------------------|
+| `*`    | No reply                 | Firewall, silent router, timeout |
+| `!H`   | Host Unreachable         | Destination unreachable          |
+| `!N`   | Network Unreachable      | Network missing or not routed    |
+| `!P`   | Protocol Unreachable     | Protocol blocked                 |
+| `!X`   | Communication Prohibited | Administrative filtering         |
 
 ### Latency analysis
 
@@ -244,32 +242,32 @@ traceroute to google.com (142.250.185.14), 30 hops max, 60 byte packets
 
 ### Router behavior
 
-- **Load balancing**: Routes can change between packets
-- **ICMP rate limiting**: Some routers limit ICMP replies
-- **Selective filtering**: Firewalls may block certain TTLs
-- **Asymmetric replies**: Router A may respond for Router B
+- `Load balancing`: Routes can change between packets
+- `ICMP rate limiting`: Some routers limit ICMP replies
+- `Selective filtering`: Firewalls may block certain TTLs
+- `Asymmetric replies`: Router A may respond for Router B
 
 ### Measurement accuracy
 
-- **Network variability**: Latencies can fluctuate significantly
-- **ICMP processing**: Low priority on many routers
-- **ARP cache**: Initial measurements may be inaccurate
-- **QoS**: Type of Service can affect packet handling
+- `Network variability`: Latencies can fluctuate significantly
+- `ICMP processing`: Low priority on many routers
+- `ARP cache`: Initial measurements may be inaccurate
+- `QoS`: Type of Service can affect packet handling
 
 ### Security considerations
 
 ⚠️ **Responsible use:**
-- **Respect organizational** network policies
-- **Avoid unauthorized** reconnaissance
-- **Consider rate limiting** to avoid being detected as an attack
+- `Respect organizational` network policies
+- `Avoid unauthorized` reconnaissance
+- `Consider rate limiting` to avoid being detected as an attack
 
 ### Detection and countermeasures
 
 Some systems can detect:
-- **Port scan patterns** (with TCP traceroute)
-- **Repeated probing** (multiple consecutive traces)
-- **Anomalous TTL patterns** (non-sequential hops)
-- **High-frequency probing** (very short intervals)
+- `Port scan patterns` (with TCP traceroute)
+- `Repeated probing` (multiple consecutive traces)
+- `Anomalous TTL patterns` (non-sequential hops)
+- `High-frequency probing` (very short intervals)
 
 ## 📄 License
 

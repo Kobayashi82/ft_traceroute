@@ -17,19 +17,17 @@
 
 [README in English](README.md)
 
-## 🎯 Descripción
-
-**ft_traceroute** es una implementación desde cero del comando `traceroute`, una herramienta esencial para el diagnóstico y análisis de rutas de red. Este proyecto explora el funcionamiento de enrutamiento IP y la topología de redes, utilizando técnicas avanzadas de manipulación de TTL (Time To Live).
+`ft_traceroute` es una implementación desde cero del comando `traceroute`, una herramienta esencial para el diagnóstico y análisis de rutas de red. Este proyecto explora el funcionamiento de enrutamiento IP y la topología de redes, utilizando técnicas avanzadas de manipulación de `TTL` (Time To Live).
 
 ### ¿Qué es Traceroute?
 
 Traceroute es una utilidad de red que:
 
-- **Mapea la ruta** que siguen los paquetes desde el origen hasta el destino
-- **Identifica routers intermedios** (saltos/hops) en el camino
-- **Mide latencia** de cada salto individual
-- **Diagnostica problemas** de enrutamiento y puntos de fallo
-- **Utiliza TTL decremental** para revelar la topología de red
+- `Mapea la ruta` que siguen los paquetes desde el origen hasta el destino
+- `Identifica routers intermedios` (saltos/hops) en el camino
+- `Mide latencia` de cada salto individual
+- `Diagnostica problemas` de enrutamiento y puntos de fallo
+- `Utiliza TTL decremental` para revelar la topología de red
 
 ### Funcionamiento Técnico
 
@@ -49,25 +47,25 @@ TTL=3  [Cliente] -----> [Router1] -----> [Router2] -----> [Destino]
 
 #### Algoritmo Básico
 
-1. **Inicialización**: Comienza con TTL = 1
-2. **Envío de sondas**: Envía múltiples paquetes (típicamente 3) con el mismo TTL
-3. **Recepción de respuestas**: 
+1. `Inicialización`: Comienza con TTL = 1
+2. `Envío de sondas`: Envía múltiples paquetes (típicamente 3) con el mismo TTL
+3. `Recepción de respuestas`: 
    - ICMP Time Exceeded → Router intermedio identificado
    - ICMP Echo Reply → Destino alcanzado
-4. **Incremento de TTL**: TTL++ para el siguiente salto
-5. **Repetición**: Continúa hasta alcanzar el destino o máximo TTL
+4. `Incremento de TTL`: TTL++ para el siguiente salto
+5. `Repetición`: Continúa hasta alcanzar el destino o máximo TTL
 
 ### Tipos de Sondas
 
 ft_traceroute puede usar diferentes protocolos para las sondas:
 
-| Protocolo |  Puerto  |   Detección    |
+| Protocolo | Puerto   | Detección      |
 |-----------|----------|----------------|
-| **UDP**   | 33434+   | Puerto cerrado |
-| **ICMP**  | N/A      | Echo Reply     |
-| **TCP**   | Variable | SYN/ACK o RST  |
+| `UDP`     | 33434+   | Puerto cerrado |
+| `ICMP`    | N/A      | Echo Reply     |
+| `TCP`     | Variable | SYN/ACK o RST  |
 
-## 🔧 Compilación
+## 🔧 Instalación
 
 ```bash
 git clone https://github.com/Kobayashi82/ft_traceroute.git
@@ -94,20 +92,20 @@ sudo setcap cap_net_raw+ep ./ft_traceroute
 sudo ./ft_traceroute [opciones] <destino> [packetlen]
 ```
 
-|  Argumento  |     Tipo      |                     Descripción                      |         Ejemplo         |
+| Argumento   | Tipo          | Descripción                                          | Ejemplo                 |
 |-------------|---------------|------------------------------------------------------|-------------------------|
 | `destino`   | IPv4/Hostname | Dirección IP o nombre de host                        | `8.8.8.8`, `google.com` |
 | `packetlen` | Número        | Longitud del paquete (default: IP header + 40 bytes) | `60`, `1500`            |
 
 #### Básicas
-|   Opción   | Forma Larga |         Descripción          |
+| Opción     | Forma Larga | Descripción                  |
 |------------|-------------|------------------------------|
 | `-h`, `-?` | `--help`    | Muestra información de ayuda |
 | `-V`       | `--version` | Versión del programa         |
 |            | `--usage`   | Mensaje corto de uso         |
 
 #### Control de Ruta
-| Opción |     Forma Larga     | Parámetro |                                             Descripción                                             |
+| Opción | Forma Larga         | Parámetro | Descripción                                                                                         |
 |--------|---------------------|-----------|-----------------------------------------------------------------------------------------------------|
 | `-m`   | `--max-hops=NUM`    | Número    | Máximo número de saltos (default: 30)                                                               |
 | `-f`   | `--first-hop=NUM`   | Número    | TTL inicial (default: 1)                                                                            |
@@ -117,7 +115,7 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 | `-z`   | `--sendwait=NUM`    | Segundos  | Intervalo mínimo entre sondas (default: 0). Si NUM es mayor que 10, se interpreta como milisegundos |
 
 #### Configuración de Sondas
-| Opción |    Forma Larga    | Parámetro |                 Descripción                  |
+| Opción | Forma Larga       | Parámetro | Descripción                                  |
 |--------|-------------------|-----------|----------------------------------------------|
 | `-p`   | `--port=NUM`      | Puerto    | Puerto base para sondas UDP (default: 33434) |
 | `-s`   | `--source=ADDR`   | IP        | Dirección IP origen                          |
@@ -126,14 +124,14 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 |
 
 #### Métodos de Sondeo
-| Opción | Forma Larga |              Descripción              |
+| Opción | Forma Larga | Descripción                           |
 |--------|-------------|---------------------------------------|
 | `-I`   | `--icmp`    | Usa ICMP Echo Request en lugar de UDP |
 | `-T`   | `--tcp`     | Usa TCP SYN para sondas               |
 | `-U`   | `--udp`     | Usa UDP (comportamiento por defecto)  |
 
 #### Opciones de Red
-| Opción |     Forma Larga      |  Parámetro  |                  Descripción                  |
+| Opción | Forma Larga          | Parámetro   | Descripción                                   |
 |--------|----------------------|-------------|-----------------------------------------------|
 | `-n`   | `--numeric`          | -           | No resuelve direcciones IP a nombres          |
 | `-d`   | `--debug`            | -           | Activa depuración a nivel de socket           |
@@ -144,13 +142,13 @@ sudo ./ft_traceroute [opciones] <destino> [packetlen]
 
 La opción `-t` permite configurar el campo TOS del header IP:
 
-| Valor |         Tipo         |    Descripción     |
+| Valor | Tipo                 | Descripción        |
 |-------|----------------------|--------------------|
-| 16    | Low Delay            | Baja latencia      |
-| 4     | High Reliability     | Alta confiabilidad |
-| 8     | High Throughput      | Alto rendimiento   |
-| 136   | High Priority        | Alta prioridad     |
-| 184   | Expedited Forwarding | Reenvío expedito   |
+| `16`  | Low Delay            | Baja latencia      |
+| `4`   | High Reliability     | Alta confiabilidad |
+| `8`   | High Throughput      | Alto rendimiento   |
+| `136` | High Priority        | Alta prioridad     |
+| `184` | Expedited Forwarding | Reenvío expedito   |
 
 ## 📡 Funcionamiento Interno
 
@@ -189,22 +187,22 @@ struct icmp_time_exceeded {
 ```
 
 #### Destination Unreachable (Tipo 3)
-| Código |      Descripción       |               Significado                |
-| ------ | ---------------------- | ---------------------------------------- |
-| 0      | Network Unreachable    | Red no alcanzable                        |
-| 1      | Host Unreachable       | Host no alcanzable                       |
-| 2      | Protocol Unreachable   | Protocolo no soportado                   |
-| 3      | Port Unreachable       | Puerto cerrado (UDP traceroute)          |
-| 4      | Fragmentation Required | Fragmentación necesaria pero DF activado |
+| Código | Descripción            | Significado                              |
+|--------|------------------------|------------------------------------------|
+| `0`    | Network Unreachable    | Red no alcanzable                        |
+| `1`    | Host Unreachable       | Host no alcanzable                       |
+| `2`    | Protocol Unreachable   | Protocolo no soportado                   |
+| `3`    | Port Unreachable       | Puerto cerrado (UDP traceroute)          |
+| `4`    | Fragmentation Required | Fragmentación necesaria pero DF activado |
 
 ### Detección de Finalización
 
 La traza termina cuando:
 
-1. **Echo Reply recibido** (para ICMP traceroute)
-2. **Port Unreachable** (para UDP traceroute)
-3. **TCP SYN/ACK** o **RST** (para TCP traceroute)
-4. **Máximo TTL alcanzado** (timeout o límite)
+1. `Echo Reply recibido` (para ICMP traceroute)
+2. `Port Unreachable` (para UDP traceroute)
+3. `TCP SYN/ACK` o `RST` (para TCP traceroute)
+4. `Máximo TTL alcanzado` (timeout o límite)
 
 ## 🗺️ Interpretación de Resultados
 
@@ -244,32 +242,32 @@ traceroute to google.com (142.250.185.14), 30 hops max, 60 byte packets
 
 ### Comportamiento de Routers
 
-- **Load Balancing**: Rutas pueden cambiar entre paquetes
-- **ICMP Rate Limiting**: Algunos routers limitan respuestas ICMP
-- **Filtrado Selectivo**: Firewalls pueden bloquear ciertos TTL
-- **Respuestas Asimétricas**: Router A puede responder por Router B
+- `Load Balancing`: Rutas pueden cambiar entre paquetes
+- `ICMP Rate Limiting`: Algunos routers limitan respuestas ICMP
+- `Filtrado Selectivo`: Firewalls pueden bloquear ciertos TTL
+- `Respuestas Asimétricas`: Router A puede responder por Router B
 
 ### Precisión de Medición
 
-- **Variabilidad de red**: Latencias pueden fluctuar significativamente
-- **Procesamiento ICMP**: Prioridad baja en muchos routers
-- **Caché de ARP**: Primeras mediciones pueden ser inexactas
-- **QoS**: Type of Service puede afectar el tratamiento de paquetes
+- `Variabilidad de red`: Latencias pueden fluctuar significativamente
+- `Procesamiento ICMP`: Prioridad baja en muchos routers
+- `Caché de ARP`: Primeras mediciones pueden ser inexactas
+- `QoS`: Type of Service puede afectar el tratamiento de paquetes
 
 ### Consideraciones de Seguridad
 
 ⚠️ **Uso responsable:**
-- **Respetar políticas** de red organizacionales
-- **Evitar reconocimiento** no autorizado
-- **Considerar rate limiting** para evitar detección como ataque
+- `Respetar políticas` de red organizacionales
+- `Evitar reconocimiento` no autorizado
+- `Considerar rate limiting` para evitar detección como ataque
 
 ### Detección y Contramedidas
 
 Algunos sistemas pueden detectar:
-- **Patrones de escaneo de puertos** (con TCP traceroute)
-- **Sondeo repetitivo** (múltiples trazas consecutivas)
-- **Patrones anómalos de TTL** (saltos no secuenciales)
-- **Sondeo de alta frecuencia** (intervalos muy cortos)
+- `Patrones de escaneo de puertos` (con TCP traceroute)
+- `Sondeo repetitivo` (múltiples trazas consecutivas)
+- `Patrones anómalos de TTL` (saltos no secuenciales)
+- `Sondeo de alta frecuencia` (intervalos muy cortos)
 
 ## 📄 Licencia
 
