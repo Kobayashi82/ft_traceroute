@@ -11,7 +11,7 @@
 </div>
 
 <div align="center">
-  <img src="/W_ft_traceroute.png">
+  <img src="/images/W_ft_traceroute.jpg">
 </div>
 
 # ft_traceroute

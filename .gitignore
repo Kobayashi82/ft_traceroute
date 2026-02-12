@@ -8,6 +8,9 @@
 !doc/**
 doc/ft_traceroute\ 4.4.pdf
 
+!images
+!images/**
+
 !inc
 !inc/**
 
@@ -20,5 +23,3 @@ doc/ft_traceroute\ 4.4.pdf
 !README_es.md
 !LICENSE
 !TODO.md
-!ft_traceroute.png
-!W_ft_traceroute.png
